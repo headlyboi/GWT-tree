@@ -1,0 +1,40 @@
+.tree {
+  border-style:solid;
+  background-color: #f6f4df;
+  width:max-content;
+  height: max-content;
+  white-space: nowrap;
+  margin-right: 20px;
+}
+
+
+.selected {
+  border-collapse: collapse;
+  border: black 2px;
+  border-style: double;
+  background-color: #f6f4df;
+}
+
+.crud{
+  background-color: #f6f4df;
+  margin-top: 50px;
+  padding: 5px 7px;
+  text-decoration:double;
+  cursor: pointer;
+  cursor: hand;
+  font-size:smaller;
+  border:1px solid #bbb;
+  border-bottom: 1px solid #a0a0a0;
+  border-radius: 3px;
+ -moz-border-radius: 3px;
+  margin: left 10px;
+  position: relative;
+  top: 50p
+}
+
+.gwt-Button{
+
+  	 border-radius: 4px;
+    margin-left:1000px;
+
+}
