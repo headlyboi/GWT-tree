@@ -3,8 +3,6 @@ package com.inobitec.tree.server;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.inobitec.tree.client.GreetingService;
 
-
-
 public class GreetingServiceImpl extends RemoteServiceServlet implements 
         GreetingService {
 
