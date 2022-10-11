@@ -1,4 +1,4 @@
-package com.inobitec.tree.shared.widget;
+package com.inobitec.tree.client.widget;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class TreeTable extends Composite {
-    
+    //TODO перекинуть композит на сервер
     private static final String TREE = "Tree: ";
     private Tree tree = new Tree();
 

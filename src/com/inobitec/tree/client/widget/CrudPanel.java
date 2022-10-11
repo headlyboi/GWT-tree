@@ -1,4 +1,4 @@
-package com.inobitec.tree.shared.widget;
+package com.inobitec.tree.client.widget;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -14,7 +14,7 @@ public class CrudPanel extends Composite {
     private static final String DELETE = "Delete";
     private static final String SELECTED_NODE_ID = "selected node id = ";
 
-    private Button rootNodeButton = new Button(ADD_ROOT_NODE);
+    private Button rootNodeButton = new Button(ADD_ROOT_NODE);//TODO build to button in constructor 
     private Button childButton = new Button(ADD_CHILD);
     private Button editButton = new Button(EDIT);
     private Button deleteButton = new Button(DELETE);

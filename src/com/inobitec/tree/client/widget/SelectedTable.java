@@ -1,4 +1,4 @@
-package com.inobitec.tree.shared.widget;
+package com.inobitec.tree.client.widget;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -35,17 +35,25 @@ public class SelectedTable extends Composite {
         initWidget(flexTable);
     }
 
-    public void setTextContent(Child child) {
+    public void updateContent(Child child) {
         String id = String.valueOf(child.getId());
         String parentId = String.valueOf(child.getParentId());
         String name = child.getName();
         String ip = child.getIp();
         String port = child.getPort();
-
+        // TODO SET WIDGET
         flexTable.setText(0, 1, id);
         flexTable.setText(1, 1, parentId);
         flexTable.setText(2, 1, name);
         flexTable.setText(3, 1, ip);
         flexTable.setText(4, 1, port);
+    }
+
+    public void clearContent() {
+        flexTable.setText(0, 1, "");
+        flexTable.setText(1, 1, "");
+        flexTable.setText(2, 1, "");
+        flexTable.setText(3, 1, "");
+        flexTable.setText(4, 1, "");
     }
 }
