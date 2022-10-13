@@ -14,22 +14,31 @@ public class CrudPanel extends Composite {
     private static final String DELETE = "Delete";
     private static final String SELECTED_NODE_ID = "selected node id = ";
 
-    private Button rootNodeButton = new Button(ADD_ROOT_NODE);//TODO build to button in constructor 
-    private Button childButton = new Button(ADD_CHILD);
-    private Button editButton = new Button(EDIT);
-    private Button deleteButton = new Button(DELETE);
-
-    private HorizontalPanel horizontalPanel = new HorizontalPanel();
-
+    private Button rootNodeButton;
+    private Button childButton;
+    private Button editButton;
+    private Button deleteButton;
+    private Label selectedNodeHTML;
+    private HorizontalPanel horizontalPanel;
+    
     public CrudPanel(String style) {
-        Label selectedNodeHTML = new Label(SELECTED_NODE_ID);
+        build();
         horizontalPanel.setStyleName(style);
+        initWidget(horizontalPanel);
+    }
+
+    private void build() {
+        selectedNodeHTML = new Label(SELECTED_NODE_ID);
+        horizontalPanel = new HorizontalPanel();
+        rootNodeButton = new Button(ADD_ROOT_NODE);
+        childButton = new Button(ADD_CHILD);
+        editButton = new Button(EDIT);
+        deleteButton = new Button(DELETE);
         horizontalPanel.add(rootNodeButton);
         horizontalPanel.add(childButton);
         horizontalPanel.add(editButton);
         horizontalPanel.add(deleteButton);
         horizontalPanel.add(selectedNodeHTML);
-        initWidget(horizontalPanel);
     }
 
     public void addRootButtonClickHandler(ClickHandler clickHandler) {
@@ -43,8 +52,9 @@ public class CrudPanel extends Composite {
     public void addEditButtonClickHandler(ClickHandler clickHandler) {
         editButton.addClickHandler(clickHandler);
     }
-    
+
     public void addDeleteButtonClickHandler(ClickHandler clickHandler) {
         deleteButton.addClickHandler(clickHandler);
     }
+
 }

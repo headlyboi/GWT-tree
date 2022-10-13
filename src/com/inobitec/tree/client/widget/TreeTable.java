@@ -5,10 +5,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class TreeTable extends Composite {
-    //TODO перекинуть композит на сервер
+
     private static final String TREE = "Tree: ";
     private Tree tree = new Tree();
 
@@ -23,9 +22,5 @@ public class TreeTable extends Composite {
 
     public void addRootItem(TreeItem treeItem) {
         tree.addItem(treeItem);
-    }
-
-    public void addTextItem(Widget widget) {
-        
     }
 }
