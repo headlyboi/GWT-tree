@@ -1,17 +1,24 @@
-package com.inobitec.tree.shared.model;
+package com.inobitec.tree.server;
 
 import java.util.HashMap;
+
+import com.inobitec.tree.shared.model.Child;
 
 public class ChildCache {
 
     private HashMap<String, Child> childMap = new HashMap<>();
 
-    public HashMap<String, Child> getChildMap() {
-        return childMap;
-    }
+    private int id = 0;
 
-    public void setChildMap(HashMap<String, Child> childMap) {
-        this.childMap = childMap;
-    }
+    private int parentId;
 
+    public Child addRootNode(Child child) {
+        if (childMap.containsKey(child.getName())) {
+            return null;
+        }
+        child.setId(id++);
+        child.setParentId(-1);
+        childMap.put(child.getName(), child);
+        return child;
+    }
 }

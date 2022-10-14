@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.inobitec.tree.shared.model.Child;
 
 public class SelectedTable extends Composite {
 
@@ -33,7 +34,14 @@ public class SelectedTable extends Composite {
         flexTable.setText(4, 0, Fields.PORT);
         
         selectedVerticalPanel.add(flexTable);
+    }
 
+    public void setContent(Child child) {
+        flexTable.setText(0, 1, String.valueOf(child.getId()));
+        flexTable.setText(1, 1, String.valueOf(child.getParentId()));
+        flexTable.setText(2, 1, child.getName());
+        flexTable.setText(3, 1, child.getIp());
+        flexTable.setText(4, 1, child.getPort());
     }
 
 }

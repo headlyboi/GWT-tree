@@ -1,10 +1,7 @@
 package com.inobitec.tree.client.widget;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -12,17 +9,15 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.client.GreetingService;
-import com.inobitec.tree.client.GreetingServiceAsync;
-import com.inobitec.tree.shared.model.Child;
+import com.inobitec.tree.shared.command.Command;
 
 public class CrudDialogBox extends Composite {
 
     private static final String CLOSE = "Close";
     private static final String OK = "OK";
     private DialogBox dialogBox;
-    private Button close = new Button(CLOSE);
-    private Button ok = new Button(OK);
+    private Button closeButton = new Button(CLOSE);
+    private Button okButton = new Button(OK);
 
     private VerticalPanel fieldPanel;
     private TextBox name;
@@ -32,17 +27,20 @@ public class CrudDialogBox extends Composite {
     private HorizontalPanel ipHorizontalPanel;
     private HorizontalPanel portHorizontalPanel;
     private HorizontalPanel buttonHorizontalPanel;
-    private final Label nameLabel = new Label("name");
-    private final Label ipLabel = new Label("ip");
-    private final Label portLabel = new Label("port");
-    // TODO УБРАТЬ ЭТУ ХЕРНЮ
-    public final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
-    private final Child child;
+    private final Label nameLabel = new Label(Fields.NAME);
+    private final Label ipLabel = new Label(Fields.IP);
+    private final Label portLabel = new Label(Fields.PORT);
+
+    private Command command;
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
     public CrudDialogBox() {
-        this.child = new Child();
         build();
-        bindCloseButton(close);
-        bindOkButton(ok);
+        bindCloseButton(closeButton);
+        bindOkButton(okButton);
         setFields();
     }
 
@@ -73,8 +71,8 @@ public class CrudDialogBox extends Composite {
         ipHorizontalPanel.add(ipLabel);
         fieldPanel.add(ipHorizontalPanel);
 
-        buttonHorizontalPanel.add(close);
-        buttonHorizontalPanel.add(ok);
+        buttonHorizontalPanel.add(closeButton);
+        buttonHorizontalPanel.add(okButton);
         fieldPanel.add(buttonHorizontalPanel);
 
         dialogBox.setWidget(fieldPanel);
@@ -89,28 +87,12 @@ public class CrudDialogBox extends Composite {
         });
     }
 
-    private void bindOkButton(Button button) {
+    public void bindOkButton(Button button) {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                child.setName(name.getValue());
-                child.setIp(ip.getValue());
-                child.setPort(port.getValue());
+                command.execute();
                 dialogBox.hide();
-                
-                //TODO ПЕРЕДЕЛАТЬ ЧЕРЕЗ PATTERN COMMAND ЭТУ ДИЧЬ
-                greetingService.greetServer(child, new AsyncCallback<Child>() {
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Window.alert("shoto ne tak");
-                    }
-
-                    @Override
-                    public void onSuccess(Child result) {
-                        Window.alert("Vse zbs" + child.getName());
-                    }
-                });
             }
         });
     }
@@ -119,8 +101,15 @@ public class CrudDialogBox extends Composite {
         dialogBox.center();
     }
 
-    public Child getChild() {
-        return this.child;
+    public String getNameContent() {
+        return name.getValue();
     }
 
+    public String getIpContent() {
+        return ip.getValue();
+    }
+
+    public String getPortContent() {
+        return port.getValue();
+    }
 }

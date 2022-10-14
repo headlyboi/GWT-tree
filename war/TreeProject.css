@@ -22,11 +22,19 @@
   align-items: center;
 }
 
-.selected {
+.selected{
   border-collapse: collapse;
   border: black 2px;
   border-style: double;
   background-color: #f6f4df;
+}
+
+.allNodesTable{
+  border-collapse: collapse;
+  border: black 2px;
+  border-style: double;
+  background-color: #f6f4df;
+
 }
 
 .crud{
@@ -60,21 +68,12 @@
   border-bottom: 1px solid #bbbbbb;
   border-top: 1px solid #D2D2D2;
 }
-.gwt-DialogBox .dialogContent {
-}
+
 .gwt-DialogBox .dialogMiddleCenter {
   padding: 3px;
   background: white;
 }
-.gwt-DialogBox .dialogBottomCenter {
-  background: url(images/hborder.png) repeat-x 0px -2945px;
-}
-.gwt-DialogBox .dialogMiddleLeft {
-  background: url(images/vborder.png) repeat-y -31px 0px;
-}
-.gwt-DialogBox .dialogMiddleRight {
-  background: url(images/vborder.png) repeat-y -32px 0px;
-}
+
 .gwt-DialogBox .dialogTopLeftInner {
   width: 10px;
   height: 8px;
@@ -94,15 +93,4 @@
   height: 12px;
   zoom: 1;
 }
-.gwt-DialogBox .dialogTopLeft {
-  background: url(images/circles.png) no-repeat -20px 0px;
-}
-.gwt-DialogBox .dialogTopRight {
-  background: url(images/circles.png) no-repeat -28px 0px;
-}
-.gwt-DialogBox .dialogBottomLeft {
-  background: url(images/circles.png) no-repeat 0px -36px;
-}
-.gwt-DialogBox .dialogBottomRight {
-  background: url(images/circles.png) no-repeat -8px -36px;
-}
+

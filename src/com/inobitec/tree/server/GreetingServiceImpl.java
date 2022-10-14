@@ -8,7 +8,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
     private static final long serialVersionUID = -4136337623971180253L;
 
+    private static ChildCache childCache = new ChildCache();
+    
     public Child greetServer(Child child) throws IllegalArgumentException {
-        return child;
+        return childCache.addRootNode(child);
     }
 }

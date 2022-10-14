@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.inobitec.tree.shared.model.Child;
 
 public class TreeTable extends Composite {
 
@@ -20,7 +21,9 @@ public class TreeTable extends Composite {
         initWidget(verticalPanel);
     }
 
-    public void addRootItem(TreeItem treeItem) {
-        tree.addItem(treeItem);
+    public void addRootItem(Child child) {
+        TreeItem item = new TreeItem();
+        item.setText(child.getName());
+        tree.addItem(item);
     }
 }
