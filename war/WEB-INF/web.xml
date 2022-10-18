@@ -7,13 +7,13 @@
   
   <!-- Servlets -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.inobitec.tree.server.GreetingServiceImpl</servlet-class>
+    <servlet-name>treeServlet</servlet-name>
+    <servlet-class>com.inobitec.tree.server.TreeServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/treeproject/greet</url-pattern>
+    <servlet-name>treeServlet</servlet-name>
+    <url-pattern>/treeproject/tree</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

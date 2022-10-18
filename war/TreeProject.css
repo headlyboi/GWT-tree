@@ -93,4 +93,9 @@
   height: 12px;
   zoom: 1;
 }
-
+/* TODO Подумать, потыкать*/
+.gwt-TreeItem-selected{
+  background-color:#6697e6;
+  padding-inline-start: 0%;
+  padding-inline-end: 1vw;
+}

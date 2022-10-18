@@ -2,7 +2,7 @@ package com.inobitec.tree.shared.model;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class Child implements IsSerializable {
+public class Node implements IsSerializable {
 
     private Integer id;
 

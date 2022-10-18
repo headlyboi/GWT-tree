@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.inobitec.tree.shared.command.Command;
 
 public class CrudPanel extends Composite {
 
@@ -20,6 +21,12 @@ public class CrudPanel extends Composite {
     private Button deleteButton;
     private Label selectedNodeHTML;
     private HorizontalPanel horizontalPanel;
+    
+    private Command command;
+    
+    public void setCommand(Command command) {
+        this.command = command;
+    }
     
     public CrudPanel(String style) {
         build();

@@ -9,10 +9,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.client.GreetingService;
-import com.inobitec.tree.client.GreetingServiceAsync;
+import com.inobitec.tree.client.TreeService;
+import com.inobitec.tree.client.TreeServiceAsync;
 import com.inobitec.tree.shared.command.Command;
-import com.inobitec.tree.shared.model.Child;
+import com.inobitec.tree.shared.model.Node;
 
 public class ClientReactTreePanel extends Composite {
 
@@ -31,11 +31,12 @@ public class ClientReactTreePanel extends Composite {
     private VerticalPanel verticalPanel;
     private CrudDialogBox crudDialogBox;
     private AllNodesPanel allNodesPanel;
-    private Child child;
-    public final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+    private Node node;
+    private int selectedId;
+    public final TreeServiceAsync treeService = GWT.create(TreeService.class);
 
     private void build() {
-        child = new Child();
+        node = new Node();
         verticalPanel = new VerticalPanel();
         headingElement = new Label(MAIN_HEADER);
         treeAndSelectedHorizontalPanel = new HorizontalPanel();
@@ -44,7 +45,101 @@ public class ClientReactTreePanel extends Composite {
         crudPanel = new CrudPanel(CRUD);
         crudDialogBox = new CrudDialogBox();
         allNodesPanel = new AllNodesPanel(AN_HEADER, AN_TABLE);
+    }
 
+    private void refreshSelectionTable() {
+        treeTable.setCommand(new Command() {
+
+            @Override
+            public void bindCommand() {
+                selectedId = treeTable.getIdFromUserObj();
+                selectedTable.setContent(treeTable.getUserObj());
+            }
+        });
+    }
+
+    private void buildCrudButtons() {
+        // ROOT BUTTON
+        crudPanel.addRootButtonClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                crudDialogBox.showRootWindow();
+                crudDialogBox.setCommand(new Command() {
+
+                    @Override
+                    public void bindCommand() {
+                        node.setName(crudDialogBox.getNameContent());
+                        node.setIp(crudDialogBox.getIpContent());
+                        node.setPort(crudDialogBox.getPortContent());
+                        treeService.addRootNode(node, new AsyncCallback<Node>() {
+
+                            @Override
+                            public void onSuccess(Node result) {
+                                treeTable.addRootItem(result);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                // TODO Auto-generated method stub
+                                Window.alert(caught.getMessage());
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        // CHILD BUTTON
+        crudPanel.addChildButtonClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                crudDialogBox.showChildWindow();
+                crudDialogBox.setParentIdContent(selectedId);
+                crudDialogBox.setCommand(new Command() {
+
+                    @Override
+                    public void bindCommand() {
+                        node.setName(crudDialogBox.getNameContent());
+                        node.setIp(crudDialogBox.getIpContent());
+                        node.setPort(crudDialogBox.getPortContent());
+                        treeService.addChildNode(node, selectedId, new AsyncCallback<Node>() {
+
+                            @Override
+                            public void onSuccess(Node result) {
+                                treeTable.addChildItem(result);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                // TODO Auto-generated method stub
+                                Window.alert(caught.getMessage());
+                            }
+                        });
+                    }
+
+                });
+            }
+        });
+
+        // EDIT BUTTON
+        crudPanel.addEditButtonClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                crudDialogBox.showEditWindow();
+            }
+        });
+
+        // DELETE BUTTON
+        crudPanel.addDeleteButtonClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                crudDialogBox.showDeleteWindow();
+            }
+        });
     }
 
     public ClientReactTreePanel() {
@@ -56,66 +151,8 @@ public class ClientReactTreePanel extends Composite {
         verticalPanel.add(crudPanel);
         verticalPanel.add(allNodesPanel);
         buildCrudButtons();
+        refreshSelectionTable();
         initWidget(verticalPanel);
-    }
-
-    private void buildCrudButtons() {
-        // ROOT BUTTON
-        crudPanel.addRootButtonClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                crudDialogBox.show();
-                crudDialogBox.setCommand(new Command() {
-
-                    @Override
-                    public void execute() {
-                        child.setName(crudDialogBox.getNameContent());
-                        child.setIp(crudDialogBox.getIpContent());
-                        child.setPort(crudDialogBox.getPortContent());
-
-                        greetingService.greetServer(child, new AsyncCallback<Child>() {
-
-                            @Override
-                            public void onSuccess(Child result) {
-                             treeTable.addRootItem(child);
-                            }
-
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                // TODO Auto-generated method stub
-
-                            }
-                        });
-                    }
-                });
-            }
-        });
-        // CHILD BUTTON
-        crudPanel.addChildButtonClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                Window.alert(child.getName());
-            }
-        });
-        // EDIT BUTTON
-        crudPanel.addEditButtonClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-            }
-        });
-        // DELETE BUTTON
-        crudPanel.addDeleteButtonClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
-            }
-        });
     }
 
 }
