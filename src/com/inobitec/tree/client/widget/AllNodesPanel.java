@@ -1,5 +1,7 @@
 package com.inobitec.tree.client.widget;
 
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -7,6 +9,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.inobitec.tree.shared.model.Node;
 
 public class AllNodesPanel extends Composite {
 
@@ -19,9 +22,8 @@ public class AllNodesPanel extends Composite {
     private HorizontalPanel fieldsHorizontalPanel;
     private FlexTable flexTable;
 
-    public AllNodesPanel(String headerStyle, String tableStyle) {
+    public AllNodesPanel(String headerStyle) {
         build(headerStyle);
-        setTable(tableStyle);
         setFields();
 
         initWidget(verticalPanel);
@@ -36,14 +38,21 @@ public class AllNodesPanel extends Composite {
         flexTable = new FlexTable();
     }
 
-    private void setTable(String style) {
+    public void setTableContent(String style, List<Node> nodeList) {
+        flexTable.removeAllRows();
         flexTable.setBorderWidth(1);
         flexTable.setStyleName(style);
-        flexTable.setText(0, 0, "Листья");
-        flexTable.setText(0, 1, "Падают");
-        flexTable.setText(0, 2, "С");
-        flexTable.setText(0, 3, "Дуба");
-        flexTable.setText(0, 4, "Ясеня");
+        for (int i = 0; i < nodeList.size(); i++) {
+            Node node = nodeList.get(i);
+            if (node.equals(null)) {
+                continue;
+            }
+            flexTable.setText(i, 0, String.valueOf(node.getId()));
+            flexTable.setText(i, 1, String.valueOf(node.getParentId()));
+            flexTable.setText(i, 2, node.getName());
+            flexTable.setText(i, 3, node.getIp());
+            flexTable.setText(i, 4, node.getPort());
+        }
     }
 
     private void setFields() {

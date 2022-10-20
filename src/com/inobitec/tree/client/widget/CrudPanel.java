@@ -19,15 +19,9 @@ public class CrudPanel extends Composite {
     private Button childButton;
     private Button editButton;
     private Button deleteButton;
-    private Label selectedNodeHTML;
+    private Label selectedNodeLabel;
     private HorizontalPanel horizontalPanel;
-    
-    private Command command;
-    
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-    
+   
     public CrudPanel(String style) {
         build();
         horizontalPanel.setStyleName(style);
@@ -35,7 +29,7 @@ public class CrudPanel extends Composite {
     }
 
     private void build() {
-        selectedNodeHTML = new Label(SELECTED_NODE_ID);
+        selectedNodeLabel = new Label(SELECTED_NODE_ID);
         horizontalPanel = new HorizontalPanel();
         rootNodeButton = new Button(ADD_ROOT_NODE);
         childButton = new Button(ADD_CHILD);
@@ -45,7 +39,7 @@ public class CrudPanel extends Composite {
         horizontalPanel.add(childButton);
         horizontalPanel.add(editButton);
         horizontalPanel.add(deleteButton);
-        horizontalPanel.add(selectedNodeHTML);
+        horizontalPanel.add(selectedNodeLabel);
     }
 
     public void addRootButtonClickHandler(ClickHandler clickHandler) {
@@ -63,5 +57,8 @@ public class CrudPanel extends Composite {
     public void addDeleteButtonClickHandler(ClickHandler clickHandler) {
         deleteButton.addClickHandler(clickHandler);
     }
-
+    
+    public void setContent(int id) {
+        selectedNodeLabel.setText(SELECTED_NODE_ID + id);
+    }
 }

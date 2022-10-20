@@ -1,5 +1,7 @@
 package com.inobitec.tree.client.widget;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -33,7 +35,7 @@ public class ClientReactTreePanel extends Composite {
     private AllNodesPanel allNodesPanel;
     private Node node;
     private int selectedId;
-    public final TreeServiceAsync treeService = GWT.create(TreeService.class);
+    public static final TreeServiceAsync treeService = GWT.create(TreeService.class);
 
     private void build() {
         node = new Node();
@@ -44,16 +46,17 @@ public class ClientReactTreePanel extends Composite {
         selectedTable = new SelectedTable(SELECTED);
         crudPanel = new CrudPanel(CRUD);
         crudDialogBox = new CrudDialogBox();
-        allNodesPanel = new AllNodesPanel(AN_HEADER, AN_TABLE);
+        allNodesPanel = new AllNodesPanel(AN_HEADER);
     }
 
-    private void refreshSelectionTable() {
+    private void updateSelectionTable() {
         treeTable.setCommand(new Command() {
 
             @Override
             public void bindCommand() {
                 selectedId = treeTable.getIdFromUserObj();
                 selectedTable.setContent(treeTable.getUserObj());
+                crudPanel.setContent(selectedId);
             }
         });
     }
@@ -65,6 +68,7 @@ public class ClientReactTreePanel extends Composite {
             @Override
             public void onClick(ClickEvent event) {
                 crudDialogBox.showRootWindow();
+
                 crudDialogBox.setCommand(new Command() {
 
                     @Override
@@ -101,6 +105,7 @@ public class ClientReactTreePanel extends Composite {
 
                     @Override
                     public void bindCommand() {
+                        node.setParentId(selectedId);
                         node.setName(crudDialogBox.getNameContent());
                         node.setIp(crudDialogBox.getIpContent());
                         node.setPort(crudDialogBox.getPortContent());
@@ -113,7 +118,6 @@ public class ClientReactTreePanel extends Composite {
 
                             @Override
                             public void onFailure(Throwable caught) {
-                                // TODO Auto-generated method stub
                                 Window.alert(caught.getMessage());
                             }
                         });
@@ -129,15 +133,102 @@ public class ClientReactTreePanel extends Composite {
             @Override
             public void onClick(ClickEvent event) {
                 crudDialogBox.showEditWindow();
+                Node selectedNodeFromTreeTable = treeTable.getUserObj();
+                crudDialogBox.setAllContent(selectedNodeFromTreeTable);
+
+                crudDialogBox.setCommand(new Command() {
+
+                    @Override
+                    public void bindCommand() {
+                        node.setName(crudDialogBox.getNameContent());
+                        node.setIp(crudDialogBox.getIpContent());
+                        node.setPort(crudDialogBox.getPortContent());
+
+                        treeService.editNode(node, selectedId, new AsyncCallback<Node>() {
+
+                            @Override
+                            public void onSuccess(Node result) {
+                                treeTable.editNode(result);
+                                selectedTable.setContent(treeTable.getUserObj());
+                            }
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                Window.alert(caught.getMessage());
+                            }
+
+                        });
+
+                    }
+                });
+
             }
         });
 
-        // DELETE BUTTON
+        // DELETE BUTTON TODO ПОФИКСИТЬ ДЕЛИТ
         crudPanel.addDeleteButtonClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
                 crudDialogBox.showDeleteWindow();
+
+                crudDialogBox.setCommand(new Command() {
+
+                    @Override
+                    public void bindCommand() {
+                        treeService.deleteNode(selectedId, new AsyncCallback<Void>() {
+
+                            @Override
+                            public void onSuccess(Void result) {
+                                treeTable.deleteNode(selectedId);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                // TODO Auto-generated method stub
+                                Window.alert(caught.getMessage());
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    private void buildRefreshButton() {
+        allNodesPanel.addRefreshButtonClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                treeService.getAllNodes(new AsyncCallback<List<Node>>() {
+
+                    @Override
+                    public void onSuccess(List<Node> result) {
+                        allNodesPanel.setTableContent(AN_TABLE, result);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Window.alert(caught.getMessage());
+
+                    }
+                });
+            }
+        });
+    }
+
+    private void updateTreeTable() {
+        treeService.getAllNodes(new AsyncCallback<List<Node>>() {
+
+            @Override
+            public void onSuccess(List<Node> result) {
+               treeTable.getRootItems(result);
+               treeTable.getChildItems(result);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert(caught.getMessage());
             }
         });
     }
@@ -151,7 +242,9 @@ public class ClientReactTreePanel extends Composite {
         verticalPanel.add(crudPanel);
         verticalPanel.add(allNodesPanel);
         buildCrudButtons();
-        refreshSelectionTable();
+        buildRefreshButton();
+        updateSelectionTable();
+        updateTreeTable();
         initWidget(verticalPanel);
     }
 

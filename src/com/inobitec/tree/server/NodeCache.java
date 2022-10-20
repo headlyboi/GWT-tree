@@ -1,7 +1,9 @@
 package com.inobitec.tree.server;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import com.inobitec.tree.shared.model.Node;
 
@@ -21,7 +23,8 @@ public class NodeCache {
         childMap.put(value.getId(), value);
         return value;
     }
-
+//TODO написать дай рутов дай детей все сломалось
+    
     public Node addChildNode(Node child, Integer parentId) {
         Node value = new Node();
         if (!childMap.containsKey(parentId)) {
@@ -36,12 +39,29 @@ public class NodeCache {
         return value;
     }
 
-    public void printAll() {
-        childMap.entrySet().forEach(entry -> {
-            System.out.println("id: " + entry.getKey() + " | "
-                    + "parentId: " + entry.getValue().getParentId() + " | " +
-                    "name: " + entry.getValue().getName() + " | ");
-        });
+    public Node editNode(Node node, Integer id) {
+        Node oldNode = childMap.get(id);
+        oldNode.setName(node.getName());
+        oldNode.setIp(node.getIp());
+        oldNode.setPort(node.getPort());
+        return oldNode;
     }
-    
+
+    public void deleteNode(Integer id) {
+        childMap.remove(id);
+        for (int i = id + 1; i < childMap.size(); i++) {
+            if (childMap.get(i).getParentId() == id) {
+                childMap.remove(i);
+            }
+        }
+    }
+
+    public List<Node> getAllNodes() {
+        List<Node> nodes = childMap.values().stream().collect(Collectors.toList());
+        for (Node node : nodes) {
+            System.out.print(node.getIp() + "");
+            System.out.println(node.getName());
+        }
+        return nodes;
+    }
 }
