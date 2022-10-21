@@ -24,7 +24,9 @@ public class ClientReactTreePanel extends Composite {
     private static final String MAIN_HEADER = "Client React Tree";
     private static final String AN_HEADER = "allNodes";
     private static final String AN_TABLE = "allNodesTable";
-
+    private static final String WRAPPER_AN_TABLE = "wrapper-allNodes";
+    private static final String WRAPPER_SELECTED = "wrapper-selected";
+    
     private Label headingElement;
     private HorizontalPanel treeAndSelectedHorizontalPanel;
     private TreeTable treeTable;
@@ -43,10 +45,10 @@ public class ClientReactTreePanel extends Composite {
         headingElement = new Label(MAIN_HEADER);
         treeAndSelectedHorizontalPanel = new HorizontalPanel();
         treeTable = new TreeTable(TREE);
-        selectedTable = new SelectedTable(SELECTED);
+        selectedTable = new SelectedTable(SELECTED, WRAPPER_SELECTED);
         crudPanel = new CrudPanel(CRUD);
         crudDialogBox = new CrudDialogBox();
-        allNodesPanel = new AllNodesPanel(AN_HEADER);
+        allNodesPanel = new AllNodesPanel(AN_HEADER, WRAPPER_AN_TABLE);
     }
 
     private void updateSelectionTable() {
@@ -56,8 +58,7 @@ public class ClientReactTreePanel extends Composite {
             public void bindCommand() {
                 selectedId = treeTable.getIdFromUserObj();
                 selectedTable.setContent(treeTable.getUserObj());
-                crudPanel.setContent(selectedId);
-            }
+                crudPanel.setContent(selectedId);            }
         });
     }
 

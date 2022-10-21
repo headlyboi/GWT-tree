@@ -1,12 +1,26 @@
 .tree {
-  border-style:solid;
   background-color: #f6f4df;
   width:max-content;
   height: max-content;
   white-space: nowrap;
   margin-right: 20px;
+  border-radius: 3px; 
+  border: 1px solid black;
 }
 
+/* TODO Подумать, потыкать*/
+.gwt-TreeItem-selected{
+  background-color:#6697e6;
+  padding-inline-start: 0%;
+  padding-inline-end: 1vw;
+}
+
+
+
+
+.gwt-Label{
+font-weight: bold;
+}
 
 .rootButton{
   cursor:pointer;
@@ -17,24 +31,78 @@
 
 .value{
   height: 20px;
-  margin-left: 5px;
+  margin-left: 3px;
   display: flex;
   align-items: center;
+  
 }
 
 .selected{
   border-collapse: collapse;
-  border: black 2px;
-  border-style: double;
+  border:unset;
+  border-color:black;
+  margin: 4px;
   background-color: #f6f4df;
+}
+
+.wrapper-selected{
+  background-color: #f6f4df;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .allNodesTable{
   border-collapse: collapse;
   border: black 2px;
-  border-style: double;
   background-color: #f6f4df;
+}
 
+.wrapper-allNodes{
+  background-color: #f6f4df;
+  border-style:solid;
+  width:400px 
+}
+
+
+.allNodesIdLabel{
+  margin-left: 10px;
+  margin-right: 40px;
+}
+
+.allNodesParentIdLabel{
+  margin-right: 50px;
+
+}
+.allNodesNameLabel{
+  margin-right: 50px;
+
+}
+.allNodesIpLabel{
+  margin-right: 50px;
+
+}
+.allNodesPortLabel{
+  margin-right: 40px;
+
+}
+
+
+
+.allNodesIdColumn{
+  width: 30px;
+}
+
+.allNodesParentIdColumn{
+  width: 60px;
+}
+.allNodesNameColumn{
+  width: 70px;
+}
+.allNodesIpColumn{
+  width: 50px;
+}
+.allNodesPortColumn{
+  width: 50px;
 }
 
 .crud{
@@ -50,8 +118,10 @@
  -moz-border-radius: 3px;
   margin: left 10px;
   position: relative;
-  top: 50p
+  top: 50p;
+  width:400px;
 }
+
 
 .gwt-Button{
   	border-radius: 4px;
@@ -92,9 +162,4 @@
   height: 12px;
   zoom: 1;
 }
-/* TODO Подумать, потыкать*/
-.gwt-TreeItem-selected{
-  background-color:#6697e6;
-  padding-inline-start: 0%;
-  padding-inline-end: 1vw;
-}
+

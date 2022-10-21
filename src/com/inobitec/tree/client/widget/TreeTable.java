@@ -17,13 +17,14 @@ import com.inobitec.tree.shared.model.Node;
 public class TreeTable extends Composite {
 
     private static final String TREE = "Tree: ";
+    private static final String TOUCH = "(*)";
+    private static final String UNTOUCH = "(.)";
+    private String status = UNTOUCH;
     private Tree tree = new Tree();
     private Label label;
     private VerticalPanel verticalPanel;
     private TreeItem item;
-
     private Command command;
-    // TODO СДЕЛАТЬ ОБНОВЛЕНИЕ ТАБЛИЦЫ
 
     private void build() {
         tree = new Tree();
@@ -36,11 +37,25 @@ public class TreeTable extends Composite {
     }
 
     private void bindTable() {
+
         tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
 
             @Override
             public void onSelection(SelectionEvent<TreeItem> event) {
                 command.bindCommand();
+
+                Node item = (Node) tree.getSelectedItem().getUserObject();
+                String name = item.getName();
+                tree.getSelectedItem().setText(name + TOUCH);
+                Iterator<TreeItem> treeItemIterator = tree.treeItemIterator();
+                while (treeItemIterator.hasNext()) {
+                    TreeItem itemFromTable = treeItemIterator.next();
+                    if (!itemFromTable.isSelected()) {
+                        Node nodeFromTable = (Node) itemFromTable.getUserObject();
+                        itemFromTable.setText(nodeFromTable.getName() + status);
+                    }
+                }
+
             }
         });
     }
@@ -56,7 +71,7 @@ public class TreeTable extends Composite {
 
     public void addRootItem(Node node) {
         item = new TreeItem();
-        item.setText(node.getName());
+        item.setText(node.getName() + status);
         item.setUserObject(node);
         tree.addItem(item);
     }
@@ -70,23 +85,8 @@ public class TreeTable extends Composite {
     }
 
     public void getChildItems(List<Node> nodeList) {
-//        for (int i = 0; i < nodeList.size(); i++) {
-//            Node node = nodeList.get(i);
-//            item = new TreeItem();
-//            item.setText(node.getName());
-//            item.setUserObject(node);
-//            Iterator<TreeItem> treeItemIterator = tree.treeItemIterator();
-//            while (treeItemIterator.hasNext()) {
-//                TreeItem itemFromTable = treeItemIterator.next();
-//                Node nodeFromTable = (Node) itemFromTable.getUserObject();
-//                if (node.getParentId() == nodeFromTable.getId()) {
-//                    itemFromTable.addItem(item);
-//                }
-//            }
-//            
-//        }
         for (Node node : nodeList) {
-            if (node.getParentId()!= -1) {
+            if (node.getParentId() != -1) {
                 addChildItem(node);
             }
         }
@@ -94,7 +94,7 @@ public class TreeTable extends Composite {
 
     public void addChildItem(Node node) {
         item = new TreeItem();
-        item.setText(node.getName());
+        item.setText(node.getName() + status);
         item.setUserObject(node);
 
         int id = node.getParentId();
@@ -115,7 +115,7 @@ public class TreeTable extends Composite {
             TreeItem itemFromTable = treeItemIterator.next();
             Node nodeFromTable = (Node) itemFromTable.getUserObject();
             if (id == nodeFromTable.getId()) {
-                itemFromTable.setText(node.getName());
+                itemFromTable.setText(node.getName() + status);
                 nodeFromTable.setName(node.getName());
                 nodeFromTable.setIp(node.getIp());
                 nodeFromTable.setPort(node.getPort());
@@ -141,5 +141,9 @@ public class TreeTable extends Composite {
     public int getIdFromUserObj() {
         Node node = getUserObj();
         return node.getId();
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

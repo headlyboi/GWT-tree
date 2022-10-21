@@ -12,20 +12,23 @@ public class SelectedTable extends Composite {
     
     
     private FlexTable flexTable;
-    private Label selectedHTML;
+    private Label selectedLabel;
     private VerticalPanel selectedVerticalPanel;
-
-    public SelectedTable(String style) {
+    private VerticalPanel wrapperVerticalPanel;
+    
+    public SelectedTable(String style, String wrapperStyle) {
         build();
         flexTable.setStyleName(style);
+        wrapperVerticalPanel.setStyleName(wrapperStyle);
         initWidget(selectedVerticalPanel);
     }
 
     private void build() {
+        wrapperVerticalPanel = new VerticalPanel();
         selectedVerticalPanel = new VerticalPanel();
         flexTable = new FlexTable();
-        selectedHTML = new Label(SELECTED);
-        selectedVerticalPanel.add(selectedHTML);
+        selectedLabel = new Label(SELECTED);
+        selectedVerticalPanel.add(selectedLabel);
         
         flexTable.setBorderWidth(1);
         flexTable.setText(0, 0, Fields.ID);
@@ -34,7 +37,8 @@ public class SelectedTable extends Composite {
         flexTable.setText(3, 0, Fields.IP);
         flexTable.setText(4, 0, Fields.PORT);
         
-        selectedVerticalPanel.add(flexTable);
+        wrapperVerticalPanel.add(flexTable);
+        selectedVerticalPanel.add(wrapperVerticalPanel);
     }
 
     public void setContent(Node node) {

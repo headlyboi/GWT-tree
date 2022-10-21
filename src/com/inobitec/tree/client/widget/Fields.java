@@ -1,7 +1,5 @@
 package com.inobitec.tree.client.widget;
 
-import com.google.gwt.user.client.ui.Label;
-
 class Fields {
 
     public static final String ID = "id";
@@ -11,9 +9,4 @@ class Fields {
     public static final String PORT = "port";
     public static final String EMPTY_SYMBOL = "";
 
-    public static Label idLabel = new Label(ID);
-    public static Label parentIdLabel = new Label(PARENT_ID);
-    public static Label nameLabel = new Label(NAME);
-    public static Label ipLabel = new Label(IP);
-    public static Label portLabel = new Label(PORT);
 }

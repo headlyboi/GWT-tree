@@ -24,7 +24,6 @@ public class NodeCache {
         nodeMap.put(value.getId(), value);
         return value;
     }
-//TODO написать дай рутов дай детей все сломалось
 
     public Node addChildNode(Node child, Integer parentId) {
         Node value = new Node();
@@ -59,7 +58,7 @@ public class NodeCache {
                 keysToDelete.add(node.getId());
             }
         }
-        
+
         for (Integer key : keysToDelete) {
             nodeMap.remove(key);
         }
