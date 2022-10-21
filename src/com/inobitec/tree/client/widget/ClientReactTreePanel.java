@@ -171,7 +171,6 @@ public class ClientReactTreePanel extends Composite {
             @Override
             public void onClick(ClickEvent event) {
                 crudDialogBox.showDeleteWindow();
-
                 crudDialogBox.setCommand(new Command() {
 
                     @Override
@@ -217,13 +216,15 @@ public class ClientReactTreePanel extends Composite {
         });
     }
 
-    private void updateTreeTable() {
+    private void updateTables() {
         treeService.getAllNodes(new AsyncCallback<List<Node>>() {
 
             @Override
             public void onSuccess(List<Node> result) {
                treeTable.getRootItems(result);
                treeTable.getChildItems(result);
+               allNodesPanel.setTableContent(AN_TABLE, result);
+
             }
 
             @Override
@@ -244,7 +245,7 @@ public class ClientReactTreePanel extends Composite {
         buildCrudButtons();
         buildRefreshButton();
         updateSelectionTable();
-        updateTreeTable();
+        updateTables();
         initWidget(verticalPanel);
     }
 
