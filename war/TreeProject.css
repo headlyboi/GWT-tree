@@ -55,34 +55,40 @@ font-weight: bold;
   border-collapse: collapse;
   border: black 2px;
   background-color: #f6f4df;
+  margin: 4px;
 }
 
 .wrapper-allNodes{
   background-color: #f6f4df;
   border-style:solid;
+  border-width: 1px;
+  border-color: black;
+  border-radius: 5px;
+  
   width:400px 
 }
 
 
 .allNodesIdLabel{
   margin-left: 10px;
-  margin-right: 40px;
+  margin-right: 15px;
+  font-weight: bold;
 }
 
 .allNodesParentIdLabel{
-  margin-right: 50px;
-
+  margin-right: 60px;
+  font-weight: bold;
 }
 .allNodesNameLabel{
-  margin-right: 50px;
-
+  margin-right: 100px;
+  font-weight: bold;
 }
 .allNodesIpLabel{
   margin-right: 50px;
-
+  font-weight: bold;
 }
 .allNodesPortLabel{
-  margin-right: 40px;
+  margin-right: 10px;
 
 }
 
@@ -96,13 +102,13 @@ font-weight: bold;
   width: 60px;
 }
 .allNodesNameColumn{
-  width: 70px;
+  width: 150px;
 }
 .allNodesIpColumn{
-  width: 50px;
+  width: 100px;
 }
 .allNodesPortColumn{
-  width: 50px;
+  width: 70px;
 }
 
 .crud{
