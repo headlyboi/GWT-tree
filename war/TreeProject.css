@@ -1,7 +1,9 @@
 .tree {
   background-color: #f6f4df;
-  width:max-content;
   height: max-content;
+  width: max-content;
+  min-height: 10px;
+  min-width: 200px;
   white-space: nowrap;
   margin-right: 20px;
   border-radius: 3px; 
@@ -11,8 +13,6 @@
 /* TODO Подумать, потыкать*/
 .gwt-TreeItem-selected{
   background-color:#6697e6;
-  padding-inline-start: 0%;
-  padding-inline-end: 1vw;
 }
 
 
