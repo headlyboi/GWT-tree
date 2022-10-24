@@ -3,7 +3,6 @@ package com.inobitec.tree.client.widget;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -15,16 +14,15 @@ import com.inobitec.tree.shared.model.Node;
 public class AllNodesPanel extends Composite {
 
     private static final String ALL_NODES = "All nodes:";
-    private static final String REFRESH = "Refresh";
+    private static final String BUTTON_REFRESH = "Refresh";
 
-    private static final String ALL_NODES_ID = "allNodesId";
-    private static final String ALL_NODES_PARENT_ID = "allNodesParentId";
-    private static final String ALL_NODES_NAME = "allNodesName";
-    private static final String ALL_NODES_IP = "allNodesIp";
-    private static final String ALL_NODES_PORT = "allNodesPort";
-    private static final String COLUMN_STYLE = "allNodesColumn";
-    private static final String LABEL = "Label";
-    private static final String COLUMN = "Column";
+    private static final String STYLE_ALL_NODES_ID = "all-nodes-id";
+    private static final String STYLE_ALL_NODES_PARENT_ID = "all-nodes-parentId";
+    private static final String STYLE_ALL_NODES_NAME = "all-nodes-name";
+    private static final String STYLE_ALL_NODES_IP = "all-nodes-ip";
+    private static final String STYLE_ALL_NODES_PORT = "all-nodes-port";
+    private static final String STYLE_LABEL = "-Label";
+    private static final String STYLE_COLUMN = "-Column";
 
     private static Label idLabel;
     private static Label parentIdLabel;
@@ -32,7 +30,7 @@ public class AllNodesPanel extends Composite {
     private static Label ipLabel;
     private static Label portLabel;
 
-    private Label header;
+    private Label headerLabel;
     private Button refreshButton;
     private VerticalPanel verticalPanel;
     private HorizontalPanel fieldsHorizontalPanel;
@@ -41,15 +39,15 @@ public class AllNodesPanel extends Composite {
 
     public AllNodesPanel(String headerStyle, String wrapperStyle) {
         build(headerStyle);
-        setFields();
+        buildFields();
         wrapperVerticalPanel.setStyleName(wrapperStyle);
         initWidget(verticalPanel);
     }
 
     private void build(String headerStyle) {
-        header = new Label(ALL_NODES);
-        header.setStyleName(headerStyle);
-        refreshButton = new Button(REFRESH);
+        headerLabel = new Label(ALL_NODES);
+        headerLabel.setStyleName(headerStyle);
+        refreshButton = new Button(BUTTON_REFRESH);
         verticalPanel = new VerticalPanel();
         wrapperVerticalPanel = new VerticalPanel();
         fieldsHorizontalPanel = new HorizontalPanel();
@@ -61,38 +59,15 @@ public class AllNodesPanel extends Composite {
         ipLabel = new Label(Fields.IP);
         portLabel = new Label(Fields.PORT);
 
-        idLabel.setStyleName(ALL_NODES_ID + LABEL);
-        parentIdLabel.setStyleName(ALL_NODES_PARENT_ID + LABEL);
-        nameLabel.setStyleName(ALL_NODES_NAME + LABEL);
-        ipLabel.setStyleName(ALL_NODES_IP + LABEL);
-        portLabel.setStyleName(ALL_NODES_PORT + LABEL);
+        idLabel.setStyleName(STYLE_ALL_NODES_ID + STYLE_LABEL);
+        parentIdLabel.setStyleName(STYLE_ALL_NODES_PARENT_ID + STYLE_LABEL);
+        nameLabel.setStyleName(STYLE_ALL_NODES_NAME + STYLE_LABEL);
+        ipLabel.setStyleName(STYLE_ALL_NODES_IP + STYLE_LABEL);
+        portLabel.setStyleName(STYLE_ALL_NODES_PORT + STYLE_LABEL);
     }
 
-    public void setTableContent(String style, List<Node> nodeList) {
-        flexTable.removeAllRows();
-        flexTable.setBorderWidth(1);
-        flexTable.setStyleName(style);
-        for (int i = 0; i < nodeList.size(); i++) {
-            Node node = nodeList.get(i);
-            if (node.equals(null)) {
-                continue;
-            }
-            flexTable.setText(i, 0, String.valueOf(node.getId()));
-            flexTable.setText(i, 1, String.valueOf(node.getParentId()));
-            flexTable.setText(i, 2, node.getName());
-            flexTable.setText(i, 3, node.getIp());
-            flexTable.setText(i, 4, node.getPort());
-        }
-        flexTable.getColumnFormatter().setStyleName(0, ALL_NODES_ID + COLUMN);
-        flexTable.getColumnFormatter().setStyleName(1, ALL_NODES_PARENT_ID + COLUMN);
-        flexTable.getColumnFormatter().setStyleName(2, ALL_NODES_NAME + COLUMN);
-        flexTable.getColumnFormatter().setStyleName(3, ALL_NODES_IP + COLUMN);
-        flexTable.getColumnFormatter().setStyleName(4, ALL_NODES_PORT + COLUMN);
-    }
-
-    private void setFields() {
-        verticalPanel.add(header);
-
+    private void buildFields() {
+        verticalPanel.add(headerLabel);
         wrapperVerticalPanel.add(refreshButton);
         fieldsHorizontalPanel.add(idLabel);
         fieldsHorizontalPanel.add(parentIdLabel);
@@ -102,6 +77,28 @@ public class AllNodesPanel extends Composite {
         wrapperVerticalPanel.add(fieldsHorizontalPanel);
         wrapperVerticalPanel.add(flexTable);
         verticalPanel.add(wrapperVerticalPanel);
+    }
+
+    public void setAllNodesTable(String style, List<Node> nodeList) {
+        flexTable.removeAllRows();
+        flexTable.setBorderWidth(1);
+        flexTable.setStyleName(style);
+        for (int i = 0; i < nodeList.size(); i++) {
+            Node node = nodeList.get(i);
+            if (node.equals(null)) {
+                continue;
+            }
+            flexTable.setText(i, Fields.FIRST_COL, String.valueOf(node.getId()));
+            flexTable.setText(i, Fields.SECOND_COL, String.valueOf(node.getParentId()));
+            flexTable.setText(i, Fields.THIRD_COL, node.getName());
+            flexTable.setText(i, Fields.FOURTH_COL, node.getIp());
+            flexTable.setText(i, Fields.FIFTH_COL, node.getPort());
+        }
+        flexTable.getColumnFormatter().setStyleName(Fields.FIRST_COL, STYLE_ALL_NODES_ID + STYLE_COLUMN);
+        flexTable.getColumnFormatter().setStyleName(Fields.SECOND_COL, STYLE_ALL_NODES_PARENT_ID + STYLE_COLUMN);
+        flexTable.getColumnFormatter().setStyleName(Fields.THIRD_COL, STYLE_ALL_NODES_NAME + STYLE_COLUMN);
+        flexTable.getColumnFormatter().setStyleName(Fields.FOURTH_COL, STYLE_ALL_NODES_IP + STYLE_COLUMN);
+        flexTable.getColumnFormatter().setStyleName(Fields.FIFTH_COL, STYLE_ALL_NODES_PORT + STYLE_COLUMN);
     }
 
     public void addRefreshButtonClickHandler(ClickHandler clickHandler) {

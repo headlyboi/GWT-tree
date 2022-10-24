@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
@@ -19,46 +18,11 @@ public class TreeTable extends Composite {
     private static final String TREE = "Tree: ";
     private static final String TOUCH = "(*)";
     private static final String UNTOUCH = "(.)";
-    private String status = UNTOUCH;
     private Tree tree = new Tree();
     private Label label;
     private VerticalPanel verticalPanel;
     private TreeItem item;
     private Command command;
-
-    private void build() {
-        tree = new Tree();
-        label = new Label(TREE);
-        verticalPanel = new VerticalPanel();
-    }
-
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-
-    private void bindTable() {
-
-        tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
-
-            @Override
-            public void onSelection(SelectionEvent<TreeItem> event) {
-                command.bindCommand();
-
-                Node item = (Node) tree.getSelectedItem().getUserObject();
-                String name = item.getName();
-                tree.getSelectedItem().setText(name + TOUCH);
-                Iterator<TreeItem> treeItemIterator = tree.treeItemIterator();
-                while (treeItemIterator.hasNext()) {
-                    TreeItem itemFromTable = treeItemIterator.next();
-                    if (!itemFromTable.isSelected()) {
-                        Node nodeFromTable = (Node) itemFromTable.getUserObject();
-                        itemFromTable.setText(nodeFromTable.getName() + status);
-                    }
-                }
-
-            }
-        });
-    }
 
     public TreeTable(String style) {
         build();
@@ -69,9 +33,39 @@ public class TreeTable extends Composite {
         initWidget(verticalPanel);
     }
 
+    private void build() {
+        tree = new Tree();
+        label = new Label(TREE);
+        verticalPanel = new VerticalPanel();
+    }
+
+    private void bindTable() {
+
+        tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
+
+            @Override
+            public void onSelection(SelectionEvent<TreeItem> event) {
+                command.executeCommand();
+
+                Node item = (Node) tree.getSelectedItem().getUserObject();
+                String name = item.getName();
+                tree.getSelectedItem().setText(name + TOUCH);
+                Iterator<TreeItem> treeItemIterator = tree.treeItemIterator();
+                while (treeItemIterator.hasNext()) {
+                    TreeItem itemFromTable = treeItemIterator.next();
+                    if (!itemFromTable.isSelected()) {
+                        Node nodeFromTable = (Node) itemFromTable.getUserObject();
+                        itemFromTable.setText(nodeFromTable.getName() + UNTOUCH);
+                    }
+                }
+
+            }
+        });
+    }
+
     public void addRootItem(Node node) {
         item = new TreeItem();
-        item.setText(node.getName() + status);
+        item.setText(node.getName() + UNTOUCH);
         item.setUserObject(node);
         tree.addItem(item);
     }
@@ -94,7 +88,7 @@ public class TreeTable extends Composite {
 
     public void addChildItem(Node node) {
         item = new TreeItem();
-        item.setText(node.getName() + status);
+        item.setText(node.getName() + UNTOUCH);
         item.setUserObject(node);
 
         int id = node.getParentId();
@@ -115,7 +109,7 @@ public class TreeTable extends Composite {
             TreeItem itemFromTable = treeItemIterator.next();
             Node nodeFromTable = (Node) itemFromTable.getUserObject();
             if (id == nodeFromTable.getId()) {
-                itemFromTable.setText(node.getName() + status);
+                itemFromTable.setText(node.getName() + UNTOUCH);
                 nodeFromTable.setName(node.getName());
                 nodeFromTable.setIp(node.getIp());
                 nodeFromTable.setPort(node.getPort());
@@ -134,16 +128,17 @@ public class TreeTable extends Composite {
         }
     }
 
-    public Node getUserObj() {
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    public Node getNode() {
         return (Node) tree.getSelectedItem().getUserObject();
     }
 
-    public int getIdFromUserObj() {
-        Node node = getUserObj();
+    public int getNodeId() {
+        Node node = getNode();
         return node.getId();
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

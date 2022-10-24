@@ -1,6 +1,7 @@
 package com.inobitec.tree.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 import com.inobitec.tree.shared.model.Node;
 
 public class NodeCache {
-
+    // key - node id
     private ConcurrentMap<Integer, Node> nodeMap = new ConcurrentHashMap<>();
 
     private static int lastId = 0;
@@ -40,6 +41,9 @@ public class NodeCache {
     }
 
     public Node editNode(Node node, Integer id) {
+        if (nodeMap.get(id) == null) {
+            return null;
+        }
         Node oldNode = nodeMap.get(id);
         oldNode.setName(node.getName());
         oldNode.setIp(node.getIp());
@@ -47,12 +51,11 @@ public class NodeCache {
         return oldNode;
     }
 
-//TODO делит прикольный
     public void deleteNode(Integer id) {
         List<Integer> keysToDelete = new ArrayList<>();
         keysToDelete.add(id);
 
-        List<Node> nodes = nodeMap.values().stream().collect(Collectors.toList());
+        Collection<Node> nodes = nodeMap.values();
         for (Node node : nodes) {
             if (node.getParentId().equals(id) || keysToDelete.contains(node.getParentId())) {
                 keysToDelete.add(node.getId());

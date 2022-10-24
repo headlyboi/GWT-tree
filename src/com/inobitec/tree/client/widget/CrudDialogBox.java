@@ -2,8 +2,6 @@ package com.inobitec.tree.client.widget;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -16,16 +14,17 @@ import com.inobitec.tree.shared.model.Node;
 
 public class CrudDialogBox extends Composite {
 
-    private static final String ROOT_NODE = "Add root Node";
-    private static final String CHILD_NODE = "Add child";
-    private static final String EDIT = "Edit";
-    private static final String DELETE = "Delete";
+    private static final String BUTTON_ROOT_NODE = "Add root Node";
+    private static final String BUTTON_CHILD_NODE = "Add child";
+    private static final String BUTTON_EDIT = "Edit";
+    private static final String BUTTON_DELETE = "Delete";
 
-    private static final String CLOSE = "Close";
-    private static final String OK = "OK";
+    private static final String BUTTON_CLOSE = "Close";
+    private static final String BUTTON_OK = "OK";
+
     private DialogBox dialogBox;
-    private Button closeButton = new Button(CLOSE);
-    private Button okButton = new Button(OK);
+    private Button closeButton = new Button(BUTTON_CLOSE);
+    private Button okButton = new Button(BUTTON_OK);
 
     private VerticalPanel fieldPanel;
     private TextBox idTextBox;
@@ -48,15 +47,15 @@ public class CrudDialogBox extends Composite {
 
     private Command command;
 
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-
     public CrudDialogBox() {
         build();
         bindCloseButton(closeButton);
         bindOkButton(okButton);
-        setFields();
+        buildFields();
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
     }
 
     private void build() {
@@ -85,13 +84,14 @@ public class CrudDialogBox extends Composite {
         portHorizontalPanel.setVisible(bool);
     }
 
-
-    private void setFields() {
+    private void buildFields() {
+        idTextBox.setEnabled(false);
         idTextBox.setReadOnly(true);
         idHorizontalPanel.add(idTextBox);
         idHorizontalPanel.add(idLabel);
         fieldPanel.add(idHorizontalPanel);
 
+        parentIdTextBox.setEnabled(false);
         parentIdTextBox.setReadOnly(true);
         parentIdHorizontalPanel.add(parentIdTextBox);
         parentIdHorizontalPanel.add(parentIdLabel);
@@ -125,88 +125,92 @@ public class CrudDialogBox extends Composite {
         });
     }
 
-    public void bindOkButton(Button button) {
+    private void bindOkButton(Button button) {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                command.bindCommand();
+                command.executeCommand();
                 dialogBox.hide();
             }
         });
     }
-    
-    public void showRootWindow() {
-        clearTextBoxContent();
-        setVisibleFields(true);
-        dialogBox.setText(ROOT_NODE);
-        dialogBox.center();
-    }
 
-    public void showChildWindow() {
-        clearTextBoxContent();
-        setVisibleFields(true);
-        dialogBox.setText(CHILD_NODE);
-        dialogBox.center();
-    }
-
-    public void showEditWindow() {
-        clearTextBoxContent();
-        setVisibleFields(true);
-        dialogBox.setText(EDIT);
-        dialogBox.center();
-    }
-
-    public void showDeleteWindow() {
-        clearTextBoxContent();
-        setVisibleFields(false);
-        dialogBox.setText(DELETE);
-        dialogBox.center();
-    }
-
-    public String getNameContent() {
-        return nameTextBox.getValue();
-    }
-
-    public String getIpContent() {
-        return ipTextBox.getValue();
-    }
-
-    public String getPortContent() {
-        return portTextBox.getValue();
-    }
-
-    public String getIdContent() {
-        return idTextBox.getValue();
-    }
-
-    public String getParentIdContent() {
-        return parentIdTextBox.getValue();
-    }
-
-    public void setParentIdContent(int parentId) {
-        this.parentIdTextBox.setValue(String.valueOf(parentId));
-    }
-
-    public void setAllContent(Node node) {
-        this.idTextBox.setValue(String.valueOf(node.getId()));
-        this.nameTextBox.setValue(node.getName());
-        this.ipTextBox.setValue(node.getIp());
-        this.portTextBox.setValue(node.getPort());
-        
-        int parentIdFromNode = node.getParentId();
-        if (parentIdFromNode == -1) {
-            this.parentIdTextBox.setText(Fields.EMPTY_SYMBOL);
-            return;
-        }
-        setParentIdContent(parentIdFromNode);
-    }
-
-    private void clearTextBoxContent() {
+    private void clearTextBoxData() {
         idTextBox.setValue(Fields.EMPTY_SYMBOL);
         parentIdTextBox.setValue(Fields.EMPTY_SYMBOL);
         nameTextBox.setValue(Fields.EMPTY_SYMBOL);
         ipTextBox.setValue(Fields.EMPTY_SYMBOL);
         portTextBox.setValue(Fields.EMPTY_SYMBOL);
+    }
+
+    public void showWindow(String buttonName) {
+        clearTextBoxData();
+        switch (buttonName) {
+            case Fields.ROOT: {
+                setVisibleFields(true);
+                dialogBox.setText(BUTTON_ROOT_NODE);
+                break;
+            }
+            case Fields.CHILD: {
+                setVisibleFields(true);
+                dialogBox.setText(BUTTON_CHILD_NODE);
+                break;
+
+            }
+            case Fields.EDIT: {
+                setVisibleFields(true);
+                dialogBox.setText(BUTTON_EDIT);
+                break;
+
+            }
+
+            case Fields.DELETE: {
+                setVisibleFields(false);
+                dialogBox.setText(BUTTON_DELETE);
+                break;
+                
+            }
+        }
+        dialogBox.center();
+    }
+
+
+    public String getNameData() {
+        return nameTextBox.getValue();
+    }
+
+    public String getIpData() {
+        return ipTextBox.getValue();
+    }
+
+    public String getPortData() {
+        return portTextBox.getValue();
+    }
+
+    public String getIdData() {
+        return idTextBox.getValue();
+    }
+
+    public String getParentIdData() {
+        return parentIdTextBox.getValue();
+    }
+
+    public void setParentIdData(int parentId) {
+        this.parentIdTextBox.setValue(String.valueOf(parentId));
+    }
+
+    public void setNodeData(Node node) {
+        this.idTextBox.setValue(String.valueOf(node.getId()));
+        this.nameTextBox.setValue(node.getName());
+        this.ipTextBox.setValue(node.getIp());
+        this.portTextBox.setValue(node.getPort());
+
+        int parentIdFromNode = node.getParentId();
+        if (parentIdFromNode == -1) {
+            this.parentIdTextBox.setText(Fields.EMPTY_SYMBOL);
+            return;
+        }
+        setParentIdData(parentIdFromNode);
     }
 
 }
