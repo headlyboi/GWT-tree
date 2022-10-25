@@ -1,13 +1,10 @@
-package com.inobitec.tree.client.widget;
+package com.inobitec.tree.client.treetable;
 
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
@@ -16,8 +13,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.inobitec.tree.shared.command.Command;
 import com.inobitec.tree.shared.model.Node;
 
-public class TreeTable extends Composite {
-
+public class TreeTableView extends Composite {
     private static final String ROOT_NODE = "root-Node";
     private static final String TREE = "Tree: ";
     private static final String TOUCH = "(*)";
@@ -26,9 +22,10 @@ public class TreeTable extends Composite {
     private Label label;
     private VerticalPanel verticalPanel;
     private TreeItem item;
+    
     private Command command;
-
-    public TreeTable(String style) {
+    
+    public TreeTableView(String style) {
         build();
         verticalPanel.add(label);
         tree.setStyleName(style);

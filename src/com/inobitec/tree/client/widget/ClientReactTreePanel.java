@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.inobitec.tree.client.TreeProject;
 import com.inobitec.tree.client.TreeService;
 import com.inobitec.tree.client.TreeServiceAsync;
 import com.inobitec.tree.shared.command.Command;
@@ -21,7 +22,7 @@ public class ClientReactTreePanel extends Composite {
     private static final String STYLE_CRUD = "crud";
     private static final String STYLE_TREE = "tree";
     private static final String STYLE_SELECTED = "selected";
-    private static final String STYLE_MAIN_HEADER = "client-react-tree";
+    private static final String STYLE_MAIN_HEADER = "Client React Tree Panel";
     private static final String STYLE_ALL_NODES_HEADER = "all-nodes";
     private static final String STYLE_ALL_NODES_TABLE = "all-nodes-table";
     private static final String WRAPPER_AN_TABLE = "wrapper-all-nodes";
@@ -37,8 +38,9 @@ public class ClientReactTreePanel extends Composite {
     private AllNodesPanel allNodesPanel;
     private Node node;
     private static int selectedId = Fields.EMPTY_ID;
-    public static final TreeServiceAsync treeService = GWT.create(TreeService.class);
 
+    private TreeServiceAsync treeService = TreeProject.treeService;
+    
     public ClientReactTreePanel() {
         build();
         verticalPanel.add(headingElement);
@@ -68,10 +70,9 @@ public class ClientReactTreePanel extends Composite {
 
     private void updateSelectionTable() {
         treeTable.setCommand(new Command() {
-
             @Override
             public void executeCommand() {
-                selectedId = treeTable.getNodeId();
+                selectedId = node.getId();
                 selectedTable.setNodeData(treeTable.getNode());
                 crudPanel.setSelectedId(selectedId);
             }
@@ -79,14 +80,13 @@ public class ClientReactTreePanel extends Composite {
     }
 
     private void buildCrudButtons() {
-
+        // ROOT BUTTON in CRUD panel
         crudPanel.addRootButtonClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
                 crudDialogBox.showWindow(Fields.ROOT);
                 crudDialogBox.setCommand(new Command() {
-
                     @Override
                     public void executeCommand() {
                         node.setName(crudDialogBox.getNameData());
@@ -95,8 +95,9 @@ public class ClientReactTreePanel extends Composite {
                         treeService.addRootNode(node, new AsyncCallback<Node>() {
 
                             @Override
-                            public void onSuccess(Node result) {
-                                treeTable.addRootItem(result);
+                            public void onSuccess(Node node) {
+                                treeTable.addRootItem(node);
+                                updateAllNodesTable();
                             }
 
                             @Override
@@ -109,7 +110,7 @@ public class ClientReactTreePanel extends Composite {
             }
         });
 
-        // CHILD BUTTON
+        // CHILD BUTTON in CRUD panel
         crudPanel.addChildButtonClickHandler(new ClickHandler() {
 
             @Override
@@ -130,8 +131,9 @@ public class ClientReactTreePanel extends Composite {
                         treeService.addChildNode(node, selectedId, new AsyncCallback<Node>() {
 
                             @Override
-                            public void onSuccess(Node result) {
-                                treeTable.addChildItem(result);
+                            public void onSuccess(Node node) {
+                                treeTable.addChildItem(node);
+                                updateAllNodesTable();
                             }
 
                             @Override
@@ -140,12 +142,11 @@ public class ClientReactTreePanel extends Composite {
                             }
                         });
                     }
-
                 });
             }
         });
 
-        // EDIT BUTTON
+        // EDIT BUTTON in CRUD panel
         crudPanel.addEditButtonClickHandler(new ClickHandler() {
 
             @Override
@@ -154,8 +155,8 @@ public class ClientReactTreePanel extends Composite {
                     return;
                 }
                 crudDialogBox.showWindow(Fields.EDIT);
-                Node selectedNodeFromTreeTable = treeTable.getNode();
-                crudDialogBox.setNodeData(selectedNodeFromTreeTable);
+                Node selectedNode = treeTable.getNode();
+                crudDialogBox.setNodeData(selectedNode);    
                 crudDialogBox.setCommand(new Command() {
 
                     @Override
@@ -167,23 +168,22 @@ public class ClientReactTreePanel extends Composite {
                         treeService.editNode(node, selectedId, new AsyncCallback<Node>() {
 
                             @Override
-                            public void onSuccess(Node result) {
-                                treeTable.editNode(result);
+                            public void onSuccess(Node node) {
+                                treeTable.editNode(node);
+                                updateAllNodesTable();
                             }
 
                             @Override
                             public void onFailure(Throwable caught) {
                                 Window.alert(caught.getMessage());
                             }
-
                         });
-
                     }
                 });
-
             }
         });
 
+        // DELETE BUTTON in CRUD panel
         crudPanel.addDeleteButtonClickHandler(new ClickHandler() {
 
             @Override
@@ -204,6 +204,7 @@ public class ClientReactTreePanel extends Composite {
                                 selectedId = Fields.EMPTY_ID;
                                 crudPanel.setSelectedId(selectedId);
                                 selectedTable.clearData();
+                                updateAllNodesTable();
                             }
 
                             @Override
@@ -217,35 +218,41 @@ public class ClientReactTreePanel extends Composite {
         });
     }
 
+    //REFRESH BUTTON on AllNodesPanel
     private void buildRefreshButton() {
         allNodesPanel.addRefreshButtonClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                treeService.getAllNodes(new AsyncCallback<List<Node>>() {
-
-                    @Override
-                    public void onSuccess(List<Node> result) {
-                        allNodesPanel.setAllNodesTable(STYLE_ALL_NODES_TABLE, result);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Window.alert(caught.getMessage());
-                    }
-                });
+                updateAllNodesTable();
             }
         });
     }
+    
+    private void updateAllNodesTable() {
+        treeService.getAllNodes(new AsyncCallback<List<Node>>() {
+
+            @Override
+            public void onSuccess(List<Node> listNode) {
+                allNodesPanel.setAllNodesTable(STYLE_ALL_NODES_TABLE, listNode);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert(caught.getMessage());
+            }
+        });
+    }
+    
 
     private void updateTree() {
         treeService.getAllNodes(new AsyncCallback<List<Node>>() {
 
             @Override
-            public void onSuccess(List<Node> result) {
-                treeTable.getRootItems(result);
-                treeTable.getChildItems(result);
-                allNodesPanel.setAllNodesTable(STYLE_ALL_NODES_TABLE, result);
+            public void onSuccess(List<Node> listNode) {
+                treeTable.setAllRootItems(listNode);
+                treeTable.setAllChildItems(listNode);
+                allNodesPanel.setAllNodesTable(STYLE_ALL_NODES_TABLE, listNode);
             }
 
             @Override

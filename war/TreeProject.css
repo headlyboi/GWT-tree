@@ -10,21 +10,15 @@
   border: 1px solid black;
 }
 
+
 .gwt-TreeItem-selected{
   background-color:#6697e6;
-  /* not worked at root node*/
+  width: 100%;
   display: block !important;
 }
 
 .gwt-Label{
 font-weight: bold;
-}
-
-.rootButton{
-  cursor:pointer;
-  display:block;
-  text-align:center;
-  background-repeat:no-repeat;
 }
 
 .value{
@@ -82,7 +76,7 @@ font-weight: bold;
   font-weight: bold;
 }
 .all-nodes-ip-Label{
-  margin-right: 50px;
+  margin-right: 80px;
   font-weight: bold;
 }
 .all-nodes-port-Label{
@@ -90,7 +84,9 @@ font-weight: bold;
   font-weight: bold;
 }
 
-
+.tree div{
+  width: 100%;
+}
 
 .all-nodes-id-Column{
   width: 30px;
@@ -167,3 +163,6 @@ font-weight: bold;
   zoom: 1;
 }
 
+.gwt-TextBox-readonly{
+  background-color: #ECECEC;
+}
