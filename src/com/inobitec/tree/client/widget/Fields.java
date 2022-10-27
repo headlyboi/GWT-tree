@@ -1,6 +1,6 @@
 package com.inobitec.tree.client.widget;
 
-class Fields {
+public class Fields {
 
     public static final String ID = "id";
     public static final String PARENT_ID = "parentId";

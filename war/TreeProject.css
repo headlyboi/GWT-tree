@@ -1,4 +1,4 @@
-.tree {
+.tree-table {
   background-color: #f6f4df;
   height: max-content;
   width: max-content;
@@ -29,7 +29,7 @@ font-weight: bold;
   
 }
 
-.selected{
+.selected-table{
   border-collapse: collapse;
   border:unset;
   border-color:black;
@@ -82,10 +82,6 @@ font-weight: bold;
 .all-nodes-port-Label{
   margin-right: 10px;
   font-weight: bold;
-}
-
-.tree div{
-  width: 100%;
 }
 
 .all-nodes-id-Column{

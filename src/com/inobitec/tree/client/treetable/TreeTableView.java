@@ -10,10 +10,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.shared.command.Command;
+import com.inobitec.tree.shared.handler.Handler;
 import com.inobitec.tree.shared.model.Node;
 
-public class TreeTableView extends Composite {
+public class TreeTableView extends Composite implements TreeTableDisplay {
     private static final String ROOT_NODE = "root-Node";
     private static final String TREE = "Tree: ";
     private static final String TOUCH = "(*)";
@@ -22,15 +22,13 @@ public class TreeTableView extends Composite {
     private Label label;
     private VerticalPanel verticalPanel;
     private TreeItem item;
-    
-    private Command command;
-    
+
     public TreeTableView(String style) {
         build();
         verticalPanel.add(label);
         tree.setStyleName(style);
         verticalPanel.add(tree);
-        bindTable();
+        bindSelectionHandlerOnTreeTable();
         initWidget(verticalPanel);
     }
 
@@ -40,14 +38,13 @@ public class TreeTableView extends Composite {
         verticalPanel = new VerticalPanel();
     }
 
-    private void bindTable() {
+    private void bindSelectionHandlerOnTreeTable() {
 
         tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
 
             @Override
             public void onSelection(SelectionEvent<TreeItem> event) {
-                command.executeCommand();
-
+                
                 Node item = (Node) tree.getSelectedItem().getUserObject();
                 String name = item.getName();
                 tree.getSelectedItem().setText(name + TOUCH);
@@ -64,13 +61,7 @@ public class TreeTableView extends Composite {
         });
     }
 
-    public void addRootItem(Node node) {
-        item = new TreeItem();
-        item.setText(node.getName() + UNTOUCH);
-        item.setUserObject(node);
-        tree.addItem(item);
-    }
-
+    @Override
     public void setAllRootItems(List<Node> nodeList) {
         for (Node node : nodeList) {
             if (node.getParentId() == -1) {
@@ -79,12 +70,26 @@ public class TreeTableView extends Composite {
         }
     }
 
+    @Override
     public void setAllChildItems(List<Node> nodeList) {
         for (Node node : nodeList) {
             if (node.getParentId() != -1) {
                 addChildItem(node);
             }
         }
+    }
+
+    @Override
+    public void clearAllRoodAndChildItems() {
+        tree.clear();
+    }
+
+
+    public void addRootItem(Node node) {
+        item = new TreeItem();
+        item.setText(node.getName() + UNTOUCH);
+        item.setUserObject(node);
+        tree.addItem(item);
     }
 
     public void addChildItem(Node node) {
@@ -129,10 +134,6 @@ public class TreeTableView extends Composite {
                 itemFromTable.remove();
             }
         }
-    }
-
-    public void setCommand(Command command) {
-        this.command = command;
     }
 
     public Node getNode() {

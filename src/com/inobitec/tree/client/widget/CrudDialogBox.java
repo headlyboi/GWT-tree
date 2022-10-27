@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.inobitec.tree.shared.command.Command;
+import com.inobitec.tree.shared.handler.Handler;
 import com.inobitec.tree.shared.model.Node;
 
 public class CrudDialogBox extends Composite {
@@ -46,16 +47,12 @@ public class CrudDialogBox extends Composite {
     private final Label portLabel = new Label(Fields.PORT);
 
     private Command command;
-
+    
     public CrudDialogBox() {
         build();
         bindCloseButton(closeButton);
         bindOkButton(okButton);
         buildFields();
-    }
-
-    public void setCommand(Command command) {
-        this.command = command;
     }
 
     private void build() {
@@ -168,12 +165,30 @@ public class CrudDialogBox extends Composite {
                 setVisibleFields(false);
                 dialogBox.setText(BUTTON_DELETE);
                 break;
-                
+
             }
         }
         dialogBox.center();
     }
 
+    /**
+     * 
+     * @return return node without id and parentId, if there are fields are empty
+     */
+    public Node getNodeData() {
+        Node node = new Node();
+        if (getIdData() != Fields.EMPTY_SYMBOL) {
+            node.setId(Integer.valueOf(getIdData()));
+        }
+        if(getParentIdData() != Fields.EMPTY_SYMBOL) {
+            node.setParentId(Integer.valueOf(getParentIdData()));
+        }
+        
+        node.setName(getNameData());
+        node.setIp(getIpData());
+        node.setPort(getPortData());
+        return node;
+    }
 
     public String getNameData() {
         return nameTextBox.getValue();
@@ -199,7 +214,7 @@ public class CrudDialogBox extends Composite {
         this.parentIdTextBox.setValue(String.valueOf(parentId));
     }
 
-    public void setNodeData(Node node) {
+    public void setTextBoxData(Node node) {
         this.idTextBox.setValue(String.valueOf(node.getId()));
         this.nameTextBox.setValue(node.getName());
         this.ipTextBox.setValue(node.getIp());
@@ -211,6 +226,10 @@ public class CrudDialogBox extends Composite {
             return;
         }
         setParentIdData(parentIdFromNode);
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
     }
 
 }

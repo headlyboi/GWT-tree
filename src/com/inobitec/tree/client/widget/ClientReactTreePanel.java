@@ -2,7 +2,6 @@ package com.inobitec.tree.client.widget;
 
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -12,8 +11,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.inobitec.tree.client.TreeProject;
-import com.inobitec.tree.client.TreeService;
-import com.inobitec.tree.client.TreeServiceAsync;
 import com.inobitec.tree.shared.command.Command;
 import com.inobitec.tree.shared.model.Node;
 
@@ -39,8 +36,6 @@ public class ClientReactTreePanel extends Composite {
     private Node node;
     private static int selectedId = Fields.EMPTY_ID;
 
-    private TreeServiceAsync treeService = TreeProject.treeService;
-    
     public ClientReactTreePanel() {
         build();
         verticalPanel.add(headingElement);
@@ -68,11 +63,12 @@ public class ClientReactTreePanel extends Composite {
         allNodesPanel = new AllNodesPanel(STYLE_ALL_NODES_HEADER, WRAPPER_AN_TABLE);
     }
 
+    //FIXME TRUBLE 
     private void updateSelectionTable() {
         treeTable.setCommand(new Command() {
             @Override
             public void executeCommand() {
-                selectedId = node.getId();
+                selectedId = treeTable.getNodeId();
                 selectedTable.setNodeData(treeTable.getNode());
                 crudPanel.setSelectedId(selectedId);
             }
@@ -92,7 +88,7 @@ public class ClientReactTreePanel extends Composite {
                         node.setName(crudDialogBox.getNameData());
                         node.setIp(crudDialogBox.getIpData());
                         node.setPort(crudDialogBox.getPortData());
-                        treeService.addRootNode(node, new AsyncCallback<Node>() {
+                        TreeProject.treeService.addRootNode(node, new AsyncCallback<Node>() {
 
                             @Override
                             public void onSuccess(Node node) {
@@ -128,7 +124,7 @@ public class ClientReactTreePanel extends Composite {
                         node.setName(crudDialogBox.getNameData());
                         node.setIp(crudDialogBox.getIpData());
                         node.setPort(crudDialogBox.getPortData());
-                        treeService.addChildNode(node, selectedId, new AsyncCallback<Node>() {
+                        TreeProject.treeService.addChildNode(node, selectedId, new AsyncCallback<Node>() {
 
                             @Override
                             public void onSuccess(Node node) {
@@ -156,7 +152,7 @@ public class ClientReactTreePanel extends Composite {
                 }
                 crudDialogBox.showWindow(Fields.EDIT);
                 Node selectedNode = treeTable.getNode();
-                crudDialogBox.setNodeData(selectedNode);    
+                crudDialogBox.setTextBoxData(selectedNode);    
                 crudDialogBox.setCommand(new Command() {
 
                     @Override
@@ -165,7 +161,7 @@ public class ClientReactTreePanel extends Composite {
                         node.setIp(crudDialogBox.getIpData());
                         node.setPort(crudDialogBox.getPortData());
 
-                        treeService.editNode(node, selectedId, new AsyncCallback<Node>() {
+                        TreeProject.treeService.editNode(node, selectedId, new AsyncCallback<Node>() {
 
                             @Override
                             public void onSuccess(Node node) {
@@ -196,7 +192,7 @@ public class ClientReactTreePanel extends Composite {
 
                     @Override
                     public void executeCommand() {
-                        treeService.deleteNode(selectedId, new AsyncCallback<Void>() {
+                        TreeProject.treeService.deleteNode(selectedId, new AsyncCallback<Void>() {
 
                             @Override
                             public void onSuccess(Void result) {
@@ -230,7 +226,7 @@ public class ClientReactTreePanel extends Composite {
     }
     
     private void updateAllNodesTable() {
-        treeService.getAllNodes(new AsyncCallback<List<Node>>() {
+        TreeProject.treeService.getAllNodes(new AsyncCallback<List<Node>>() {
 
             @Override
             public void onSuccess(List<Node> listNode) {
@@ -246,7 +242,7 @@ public class ClientReactTreePanel extends Composite {
     
 
     private void updateTree() {
-        treeService.getAllNodes(new AsyncCallback<List<Node>>() {
+        TreeProject.treeService.getAllNodes(new AsyncCallback<List<Node>>() {
 
             @Override
             public void onSuccess(List<Node> listNode) {
@@ -261,4 +257,5 @@ public class ClientReactTreePanel extends Composite {
             }
         });
     }
+    
 }
