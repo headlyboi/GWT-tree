@@ -2,14 +2,17 @@ package com.inobitec.tree.client.crudpanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.inobitec.tree.client.event.handler.ChildHandler;
+import com.inobitec.tree.client.event.handler.EditHandler;
+import com.inobitec.tree.client.event.handler.RootHandler;
 import com.inobitec.tree.client.widget.CrudDialogBox;
 import com.inobitec.tree.client.widget.Fields;
 import com.inobitec.tree.shared.command.Command;
-import com.inobitec.tree.shared.handler.Handler;
 import com.inobitec.tree.shared.model.Node;
 
 public class CrudPanelView extends Composite implements CrudPanelDisplay {
@@ -26,9 +29,12 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private Label selectedNodeLabel;
     private CrudDialogBox crudDialogBox;
     private HorizontalPanel horizontalPanel;
-
-    private Handler handler;
-
+    private String selectedId = Fields.EMPTY_SYMBOL;
+    
+    private RootHandler rootHandler;
+    private ChildHandler childHandler;
+    private EditHandler editHandler;
+    
     public CrudPanelView(String style) {
         build();
         horizontalPanel.setStyleName(style);
@@ -68,7 +74,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         crudDialogBox.setCommand(new Command() {
             @Override
             public void executeCommand() {
-                handler.executeHandler(crudDialogBox.getNodeData());
+                rootHandler.executeRootHandler(crudDialogBox.getNodeData());
             }
         });
     }
@@ -78,18 +84,45 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
 
             @Override
             public void onClick(ClickEvent event) {
+                doChildClicked();
             }
         });
     }
 
+    private void doChildClicked() {
+        crudDialogBox.showWindow(ADD_CHILD);
+        crudDialogBox.setParentIdData(getSelectedId());
+        crudDialogBox.setCommand(new Command(){
+
+            @Override
+            public void executeCommand() {
+                childHandler.executeChildHandler(crudDialogBox.getNodeData(), getSelectedId());
+            }
+            
+        });
+    }
 
     private void bindEditButtonClickHandler() {
         editButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-
+                doEditClicked();
             }
+        });
+    }
+    
+    public void doEditClicked() {
+        crudDialogBox.showWindow(EDIT);
+        crudDialogBox.setTextBoxData(null);
+        crudDialogBox.setParentIdData(getSelectedId());
+        crudDialogBox.setCommand(new Command(){
+
+            @Override
+            public void executeCommand() {
+                editHandler.executeEditHandler(crudDialogBox.getNodeData(), getSelectedId());
+            }
+            
         });
     }
     
@@ -103,17 +136,34 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         });
     }
 
+    @Override
     public void setSelectedId(int id) {
         if (id == Fields.EMPTY_ID) {
-            selectedNodeLabel.setText(SELECTED_NODE_ID);
+            selectedNodeLabel.setText(SELECTED_NODE_ID + Fields.EMPTY_SYMBOL);
             return;
         }
-        selectedNodeLabel.setText(SELECTED_NODE_ID + id);
+        selectedId = String.valueOf(id);
+        selectedNodeLabel.setText(SELECTED_NODE_ID + selectedId);
     }
 
     @Override
-    public void setHandler(Handler handler) {
-        this.handler = handler;
+    public void setRootHandler(RootHandler rootHandler) {
+        this.rootHandler = rootHandler;
+    }
+
+    @Override
+    public void setChildHandler(ChildHandler childHandler) {
+        this.childHandler = childHandler;
+        
+    }
+
+    public void setEditHandler(EditHandler editHandler) {
+        this.editHandler = editHandler;
+    }
+    
+    @Override
+    public int getSelectedId() {
+        return Integer.valueOf(selectedId);
     }
 
 }

@@ -1,8 +1,9 @@
 package com.inobitec.tree.client.selectedTable;
 
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.inobitec.tree.shared.model.Node;
 
-public class SelectedTablePresenter implements Presenter{
+public class SelectedTablePresenter{
 
     private SelectedTableDisplay view;
     
@@ -12,5 +13,9 @@ public class SelectedTablePresenter implements Presenter{
 
     public void go(HasWidgets container) {
         container.add(view.asWidget());
+    }
+    
+    public void updateNodeData(Node node) {
+        view.setNodeData(node);
     }
 }

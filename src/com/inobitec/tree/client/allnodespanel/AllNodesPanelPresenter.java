@@ -1,13 +1,38 @@
 package com.inobitec.tree.client.allnodespanel;
 
-import com.google.gwt.user.client.ui.HasWidgets;
+import java.util.List;
 
-public class AllNodesPanelPresenter implements Presenter {
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.inobitec.tree.client.TreeProject;
+import com.inobitec.tree.shared.model.Node;
+
+public class AllNodesPanelPresenter {
 
     private AllNodesPanelDisplay view;
     
     public AllNodesPanelPresenter(AllNodesPanelDisplay view) {
         this.view = view;
+    }
+    
+    private void getAllNodes() {
+        TreeProject.treeService.getAllNodes(new AsyncCallback<List<Node>>() {
+
+            @Override
+            public void onSuccess(List<Node> listNode) {
+                view.setAllNodesTable(listNode);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert(caught.getMessage());
+            }
+        });
+    }
+    
+    public void updateAllNodes() {
+        getAllNodes();
     }
     
     public void go(HasWidgets container) {

@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.inobitec.tree.client.widget.Fields;
 import com.inobitec.tree.shared.model.Node;
 
-public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay{
+public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay {
     private static final String ALL_NODES = "All nodes:";
     private static final String BUTTON_REFRESH = "Refresh";
 
@@ -23,6 +23,8 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
     private static final String STYLE_ALL_NODES_PORT = "all-nodes-port";
     private static final String STYLE_LABEL = "-Label";
     private static final String STYLE_COLUMN = "-Column";
+
+    private static final String STYLE_ALL_NODES_TABLE = "all-nodes-table";
 
     private static Label idLabel;
     private static Label parentIdLabel;
@@ -79,17 +81,21 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
         verticalPanel.add(wrapperVerticalPanel);
     }
 
-    public void setAllNodesTable(String style, List<Node> nodeList) {
+    public void setAllNodesTable(List<Node> nodeList) {
         flexTable.removeAllRows();
         flexTable.setBorderWidth(1);
-        flexTable.setStyleName(style);
+        flexTable.setStyleName(STYLE_ALL_NODES_TABLE);
         for (int i = 0; i < nodeList.size(); i++) {
             Node node = nodeList.get(i);
             if (node.equals(null)) {
                 continue;
             }
+            String parentId = String.valueOf(node.getParentId());
+            if (node.getParentId() == Fields.EMPTY_ID) {
+                parentId = Fields.EMPTY_SYMBOL;
+            }
             flexTable.setText(i, Fields.FIRST_COL, String.valueOf(node.getId()));
-            flexTable.setText(i, Fields.SECOND_COL, String.valueOf(node.getParentId()));
+            flexTable.setText(i, Fields.SECOND_COL, parentId);
             flexTable.setText(i, Fields.THIRD_COL, node.getName());
             flexTable.setText(i, Fields.FOURTH_COL, node.getIp());
             flexTable.setText(i, Fields.FIFTH_COL, node.getPort());

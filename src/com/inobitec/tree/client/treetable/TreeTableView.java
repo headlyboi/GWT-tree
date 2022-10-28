@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.shared.handler.Handler;
+import com.inobitec.tree.client.event.command.SelectedNodeCommand;
 import com.inobitec.tree.shared.model.Node;
 
 public class TreeTableView extends Composite implements TreeTableDisplay {
@@ -22,6 +22,8 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
     private Label label;
     private VerticalPanel verticalPanel;
     private TreeItem item;
+
+    private SelectedNodeCommand selectedNodeCommand;
 
     public TreeTableView(String style) {
         build();
@@ -44,7 +46,6 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
 
             @Override
             public void onSelection(SelectionEvent<TreeItem> event) {
-                
                 Node item = (Node) tree.getSelectedItem().getUserObject();
                 String name = item.getName();
                 tree.getSelectedItem().setText(name + TOUCH);
@@ -56,6 +57,7 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
                         itemFromTable.setText(nodeFromTable.getName() + UNTOUCH);
                     }
                 }
+                selectedNodeCommand.executeSelectedNodeCommand();
 
             }
         });
@@ -84,6 +86,10 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
         tree.clear();
     }
 
+    @Override
+    public Node getSelectedNode() {
+        return (Node) tree.getSelectedItem().getUserObject();
+    }
 
     public void addRootItem(Node node) {
         item = new TreeItem();
@@ -136,13 +142,14 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
         }
     }
 
-    public Node getNode() {
-        return (Node) tree.getSelectedItem().getUserObject();
+    public int getNodeId() {
+        Node node = getSelectedNode();
+        return node.getId();
     }
 
-    public int getNodeId() {
-        Node node = getNode();
-        return node.getId();
+    @Override
+    public void setSelectedNodeCommand(SelectedNodeCommand selectedNodeCommand) {
+        this.selectedNodeCommand = selectedNodeCommand;
     }
 
 }
