@@ -46,7 +46,7 @@ public class CrudDialogBox extends Composite {
     private final Label portLabel = new Label(Fields.PORT);
 
     private Command command;
-    
+
     public CrudDialogBox() {
         build();
         bindCloseButton(closeButton);
@@ -151,13 +151,11 @@ public class CrudDialogBox extends Composite {
                 setVisibleFields(true);
                 dialogBox.setText(BUTTON_CHILD_NODE);
                 break;
-
             }
             case Fields.EDIT: {
                 setVisibleFields(true);
                 dialogBox.setText(BUTTON_EDIT);
                 break;
-
             }
 
             case Fields.DELETE: {
@@ -179,10 +177,10 @@ public class CrudDialogBox extends Composite {
         if (getIdData() != Fields.EMPTY_SYMBOL) {
             node.setId(Integer.valueOf(getIdData()));
         }
-        if(getParentIdData() != Fields.EMPTY_SYMBOL) {
+        if (getParentIdData() != Fields.EMPTY_SYMBOL) {
             node.setParentId(Integer.valueOf(getParentIdData()));
         }
-        
+
         node.setName(getNameData());
         node.setIp(getIpData());
         node.setPort(getPortData());

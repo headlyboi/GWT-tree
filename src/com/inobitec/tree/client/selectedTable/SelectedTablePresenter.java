@@ -18,4 +18,8 @@ public class SelectedTablePresenter{
     public void updateNodeData(Node node) {
         view.setNodeData(node);
     }
+    
+    public void clearData() {
+        view.clearData();
+    }
 }

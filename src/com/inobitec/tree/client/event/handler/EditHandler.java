@@ -6,4 +6,5 @@ public interface EditHandler {
 
     void executeEditHandler(Node node, int selectedId);
 
+    Node getSelectedNode();
 }

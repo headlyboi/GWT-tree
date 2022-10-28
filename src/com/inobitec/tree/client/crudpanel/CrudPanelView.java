@@ -2,18 +2,17 @@ package com.inobitec.tree.client.crudpanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.inobitec.tree.client.event.handler.ChildHandler;
+import com.inobitec.tree.client.event.handler.DeleteHandler;
 import com.inobitec.tree.client.event.handler.EditHandler;
 import com.inobitec.tree.client.event.handler.RootHandler;
 import com.inobitec.tree.client.widget.CrudDialogBox;
 import com.inobitec.tree.client.widget.Fields;
 import com.inobitec.tree.shared.command.Command;
-import com.inobitec.tree.shared.model.Node;
 
 public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private static final String ADD_ROOT_NODE = "Add root node";
@@ -30,11 +29,12 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private CrudDialogBox crudDialogBox;
     private HorizontalPanel horizontalPanel;
     private String selectedId = Fields.EMPTY_SYMBOL;
-    
+
     private RootHandler rootHandler;
     private ChildHandler childHandler;
     private EditHandler editHandler;
-    
+    private DeleteHandler deleteHandler;
+
     public CrudPanelView(String style) {
         build();
         horizontalPanel.setStyleName(style);
@@ -90,15 +90,15 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     private void doChildClicked() {
-        crudDialogBox.showWindow(ADD_CHILD);
+        crudDialogBox.showWindow(Fields.CHILD);
         crudDialogBox.setParentIdData(getSelectedId());
-        crudDialogBox.setCommand(new Command(){
+        crudDialogBox.setCommand(new Command() {
 
             @Override
             public void executeCommand() {
                 childHandler.executeChildHandler(crudDialogBox.getNodeData(), getSelectedId());
             }
-            
+
         });
     }
 
@@ -111,27 +111,34 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
             }
         });
     }
-    
+
     public void doEditClicked() {
-        crudDialogBox.showWindow(EDIT);
-        crudDialogBox.setTextBoxData(null);
+        crudDialogBox.showWindow(Fields.EDIT);
+        crudDialogBox.setTextBoxData(editHandler.getSelectedNode());
         crudDialogBox.setParentIdData(getSelectedId());
-        crudDialogBox.setCommand(new Command(){
+        crudDialogBox.setCommand(new Command() {
 
             @Override
             public void executeCommand() {
                 editHandler.executeEditHandler(crudDialogBox.getNodeData(), getSelectedId());
             }
-            
+
         });
     }
-    
+
     private void bindDeleteButtonClickHandler() {
         deleteButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
                 crudDialogBox.showWindow(Fields.DELETE);
+                crudDialogBox.setCommand(new Command() {
+
+                    @Override
+                    public void executeCommand() {
+                        deleteHandler.executeDeleteHandler(getSelectedId());
+                    }
+                });
             }
         });
     }
@@ -154,16 +161,28 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     @Override
     public void setChildHandler(ChildHandler childHandler) {
         this.childHandler = childHandler;
-        
+
     }
 
     public void setEditHandler(EditHandler editHandler) {
         this.editHandler = editHandler;
     }
-    
+
     @Override
     public int getSelectedId() {
         return Integer.valueOf(selectedId);
+    }
+
+    @Override
+    public void setDeleteHandler(DeleteHandler deleteHandler) {
+        this.deleteHandler = deleteHandler;
+    }
+
+    @Override
+    public void setActiveButtons(boolean bool) {
+        childButton.setEnabled(bool);
+        editButton.setEnabled(bool);
+        deleteButton.setEnabled(bool);
     }
 
 }

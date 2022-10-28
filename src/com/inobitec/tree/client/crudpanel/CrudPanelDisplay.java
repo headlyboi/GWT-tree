@@ -2,6 +2,7 @@ package com.inobitec.tree.client.crudpanel;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.inobitec.tree.client.event.handler.ChildHandler;
+import com.inobitec.tree.client.event.handler.DeleteHandler;
 import com.inobitec.tree.client.event.handler.EditHandler;
 import com.inobitec.tree.client.event.handler.RootHandler;
 
@@ -13,7 +14,11 @@ public interface CrudPanelDisplay extends IsWidget {
     
     void setEditHandler(EditHandler handler);
     
+    void setDeleteHandler(DeleteHandler handler);
+    
     void setSelectedId(int selectedId);
+    
+    void setActiveButtons(boolean bool);
     
     int getSelectedId();
 }

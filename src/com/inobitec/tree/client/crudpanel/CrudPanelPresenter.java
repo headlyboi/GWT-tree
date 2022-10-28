@@ -5,9 +5,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.inobitec.tree.client.TreeProject;
 import com.inobitec.tree.client.event.command.ChildCommand;
+import com.inobitec.tree.client.event.command.DeleteCommand;
 import com.inobitec.tree.client.event.command.EditCommand;
 import com.inobitec.tree.client.event.command.RootCommand;
 import com.inobitec.tree.client.event.handler.ChildHandler;
+import com.inobitec.tree.client.event.handler.DeleteHandler;
 import com.inobitec.tree.client.event.handler.EditHandler;
 import com.inobitec.tree.client.event.handler.RootHandler;
 import com.inobitec.tree.shared.model.Node;
@@ -19,12 +21,14 @@ public class CrudPanelPresenter {
     private RootCommand rootCommand;
     private ChildCommand childCommand;
     private EditCommand editCommand;
+    private DeleteCommand deleteCommand;
 
     public CrudPanelPresenter(CrudPanelDisplay view) {
         this.view = view;
         buildRootHandler();
         buildChildHandler();
         buildEditClickHandler();
+        buildDeleteClickHandler();
     }
 
     private void buildRootHandler() {
@@ -84,6 +88,11 @@ public class CrudPanelPresenter {
             public void executeEditHandler(Node node, int selectedId) {
                 editNode(node, selectedId);
             }
+
+            @Override
+            public Node getSelectedNode() {
+                return editCommand.getSelectedNode();
+            }
         });
     }
 
@@ -102,16 +111,22 @@ public class CrudPanelPresenter {
         });
     }
 
+    private void buildDeleteClickHandler() {
+        view.setDeleteHandler(new DeleteHandler() {
+
+            @Override
+            public void executeDeleteHandler(int id) {
+                deleteNode(id);
+            }
+        });
+    }
+
     private void deleteNode(int selectedId) {
         TreeProject.treeService.deleteNode(selectedId, new AsyncCallback<Void>() {
 
             @Override
             public void onSuccess(Void result) {
-//              treeTableView.deleteNode(selectedId);
-//              selectedId = Fields.EMPTY_ID;
-//              crudPanel.setSelectedId(selectedId);
-//              selectedTable.clearData();
-//              updateAllNodesTable();
+                deleteCommand.executeDeleteCommand();
             }
 
             @Override
@@ -121,6 +136,10 @@ public class CrudPanelPresenter {
         });
     }
 
+    public void setActiveButtons(boolean bool) {
+        view.setActiveButtons(bool);
+    }
+    
     public void setSelectedId(int selectedId) {
         view.setSelectedId(selectedId);
     }
@@ -139,6 +158,10 @@ public class CrudPanelPresenter {
 
     public void setEditCommand(EditCommand editCommand) {
         this.editCommand = editCommand;
+    }
+
+    public void setDeleteCommand(DeleteCommand deleteCommand) {
+        this.deleteCommand = deleteCommand;
     }
 
     public void go(HasWidgets container) {
