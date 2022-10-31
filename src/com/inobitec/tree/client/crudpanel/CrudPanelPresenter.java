@@ -4,10 +4,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.inobitec.tree.client.TreeProject;
-import com.inobitec.tree.client.event.command.ChildCommand;
-import com.inobitec.tree.client.event.command.DeleteCommand;
-import com.inobitec.tree.client.event.command.EditCommand;
-import com.inobitec.tree.client.event.command.RootCommand;
+import com.inobitec.tree.client.event.command.CrudCommand;
 import com.inobitec.tree.client.event.handler.ChildHandler;
 import com.inobitec.tree.client.event.handler.DeleteHandler;
 import com.inobitec.tree.client.event.handler.EditHandler;
@@ -18,20 +15,21 @@ public class CrudPanelPresenter {
 
     private CrudPanelDisplay view;
 
-    private RootCommand rootCommand;
-    private ChildCommand childCommand;
-    private EditCommand editCommand;
-    private DeleteCommand deleteCommand;
+    private CrudCommand crudCommand;
 
     public CrudPanelPresenter(CrudPanelDisplay view) {
         this.view = view;
-        buildRootHandler();
-        buildChildHandler();
-        buildEditClickHandler();
-        buildDeleteClickHandler();
+        build();
     }
 
-    private void buildRootHandler() {
+    private void build() {
+        bindRootHandler();
+        bindChildHandler();
+        bindEditClickHandler();
+        bindDeleteClickHandler();
+    }
+    
+    private void bindRootHandler() {
         view.setRootHandler(new RootHandler() {
 
             @Override
@@ -46,7 +44,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                rootCommand.executeRootCommand();
+                crudCommand.executeCrudCommand();
             }
 
             @Override
@@ -56,7 +54,7 @@ public class CrudPanelPresenter {
         });
     }
 
-    private void buildChildHandler() {
+    private void bindChildHandler() {
         view.setChildHandler(new ChildHandler() {
 
             @Override
@@ -71,7 +69,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                childCommand.executeChildCommand();
+                crudCommand.executeCrudCommand();
             }
 
             @Override
@@ -81,7 +79,7 @@ public class CrudPanelPresenter {
         });
     }
 
-    private void buildEditClickHandler() {
+    private void bindEditClickHandler() {
         view.setEditHandler(new EditHandler() {
 
             @Override
@@ -96,7 +94,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                editCommand.executeEditCommand();
+                crudCommand.executeCrudCommand();
             }
 
             @Override
@@ -106,7 +104,7 @@ public class CrudPanelPresenter {
         });
     }
 
-    private void buildDeleteClickHandler() {
+    private void bindDeleteClickHandler() {
         view.setDeleteHandler(new DeleteHandler() {
 
             @Override
@@ -121,7 +119,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Void result) {
-                deleteCommand.executeDeleteCommand();
+                crudCommand.executeCrudCommand();
             }
 
             @Override
@@ -134,7 +132,7 @@ public class CrudPanelPresenter {
     public void setActiveButtons(boolean bool) {
         view.setActiveButtons(bool);
     }
-    
+
     public void setSelectedNode(Node selectedNode) {
         view.setSelectedNode(selectedNode);
     }
@@ -142,21 +140,9 @@ public class CrudPanelPresenter {
     public void setSelectedId(int id) {
         view.setSelectedId(id);
     }
-    
-    public void setRootCommand(RootCommand rootCommand) {
-        this.rootCommand = rootCommand;
-    }
 
-    public void setChildCommand(ChildCommand childCommand) {
-        this.childCommand = childCommand;
-    }
-
-    public void setEditCommand(EditCommand editCommand) {
-        this.editCommand = editCommand;
-    }
-
-    public void setDeleteCommand(DeleteCommand deleteCommand) {
-        this.deleteCommand = deleteCommand;
+    public void setCrudCommand(CrudCommand crudCommand) {
+        this.crudCommand = crudCommand;
     }
 
     public void go(HasWidgets container) {

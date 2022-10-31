@@ -2,6 +2,7 @@ package com.inobitec.tree.client.allnodespanel;
 
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -9,6 +10,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.inobitec.tree.client.event.command.RefreshCommand;
 import com.inobitec.tree.shared.Fields;
 import com.inobitec.tree.shared.model.Node;
 
@@ -41,22 +43,24 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
     private VerticalPanel wrapperVerticalPanel;
     private FlexTable flexTable;
 
+    private RefreshCommand refreshCommand;
+    
     public AllNodesPanelView(String headerStyle, String wrapperStyle) {
-        build(headerStyle);
+        build(headerStyle, wrapperStyle);
         buildFields();
-        wrapperVerticalPanel.setStyleName(wrapperStyle);
+        bindRefreshButton();
         initWidget(verticalPanel);
     }
 
-    private void build(String headerStyle) {
+    private void build(String headerStyle, String wrapperStyle) {
         headerLabel = new Label(ALL_NODES);
         headerLabel.setStyleName(headerStyle);
         refreshButton = new Button(BUTTON_REFRESH);
         verticalPanel = new VerticalPanel();
         wrapperVerticalPanel = new VerticalPanel();
+        wrapperVerticalPanel.setStyleName(wrapperStyle);
         fieldsHorizontalPanel = new HorizontalPanel();
         flexTable = new FlexTable();
-
         idLabel = new Label(Fields.ID);
         parentIdLabel = new Label(Fields.PARENT_ID);
         nameLabel = new Label(Fields.NAME);
@@ -84,7 +88,17 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
         wrapperVerticalPanel.add(flexTable);
         verticalPanel.add(wrapperVerticalPanel);
     }
-
+    
+    private void bindRefreshButton() {
+        refreshButton.addClickHandler(new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                refreshCommand.executeRefreshCommand();
+            }
+        });
+    }
+    
     @Override
     public void setAllNodesTable(List<Node> nodeList) {
         flexTable.removeAllRows();
@@ -110,8 +124,9 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
         flexTable.getColumnFormatter().setStyleName(Fields.IP_NODE_COL, STYLE_ALL_NODES_IP + STYLE_COLUMN);
         flexTable.getColumnFormatter().setStyleName(Fields.PORT_NODE_COL, STYLE_ALL_NODES_PORT + STYLE_COLUMN);
     }
-
-    public void addRefreshButtonClickHandler(ClickHandler clickHandler) {
-        refreshButton.addClickHandler(clickHandler);
+    
+    @Override
+    public void setRefreshCommand(RefreshCommand refreshCommand) {
+        this.refreshCommand = refreshCommand;
     }
 }

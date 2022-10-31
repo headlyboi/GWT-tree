@@ -8,10 +8,7 @@ import com.inobitec.tree.client.allnodespanel.AllNodesPanelPresenter;
 import com.inobitec.tree.client.allnodespanel.AllNodesPanelView;
 import com.inobitec.tree.client.crudpanel.CrudPanelPresenter;
 import com.inobitec.tree.client.crudpanel.CrudPanelView;
-import com.inobitec.tree.client.event.command.ChildCommand;
-import com.inobitec.tree.client.event.command.DeleteCommand;
-import com.inobitec.tree.client.event.command.EditCommand;
-import com.inobitec.tree.client.event.command.RootCommand;
+import com.inobitec.tree.client.event.command.CrudCommand;
 import com.inobitec.tree.client.event.command.SelectedNodeCommand;
 import com.inobitec.tree.client.selectedTable.SelectedTablePresenter;
 import com.inobitec.tree.client.selectedTable.SelectedTableView;
@@ -45,10 +42,7 @@ public class PanelMVC extends Composite {
     public PanelMVC() {
         build();
         addSelectedNodeEvent();
-        addRootNodeEvent();
-        addChildNodeEvent();
-        addEditNodeEvent();
-        addDeleteNodeEvent();
+        addCrudEvent();
         update();
         initWidget(verticalPanel);
     }
@@ -83,49 +77,11 @@ public class PanelMVC extends Composite {
         selectedTablePresenter.clearData();
     }
 
-    // TODO Think about commands
-    private void addRootNodeEvent() {
-        crudPanelPresenter.setRootCommand(new RootCommand() {
+    private void addCrudEvent() {
+        crudPanelPresenter.setCrudCommand(new CrudCommand() {
 
             @Override
-            public void executeRootCommand() {
-                update();
-                clearSelection();
-                crudPanelPresenter.setActiveButtons(false);
-            }
-        });
-    }
-
-    private void addChildNodeEvent() {
-        crudPanelPresenter.setChildCommand(new ChildCommand() {
-
-            @Override
-            public void executeChildCommand() {
-                update();
-                clearSelection();
-                crudPanelPresenter.setActiveButtons(false);
-            }
-        });
-    }
-
-    private void addEditNodeEvent() {
-        crudPanelPresenter.setEditCommand(new EditCommand() {
-
-            @Override
-            public void executeEditCommand() {
-                update();
-                clearSelection();
-                crudPanelPresenter.setActiveButtons(false);
-
-            }
-        });
-    }
-
-    private void addDeleteNodeEvent() {
-        crudPanelPresenter.setDeleteCommand(new DeleteCommand() {
-
-            @Override
-            public void executeDeleteCommand() {
+            public void executeCrudCommand() {
                 update();
                 clearSelection();
                 crudPanelPresenter.setActiveButtons(false);

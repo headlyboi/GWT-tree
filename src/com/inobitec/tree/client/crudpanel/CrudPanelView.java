@@ -31,7 +31,6 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private HorizontalPanel horizontalPanel;
     private String selectedId = Fields.EMPTY_SYMBOL;
     private Node selectedNode;
-    
 
     private RootHandler rootHandler;
     private ChildHandler childHandler;
@@ -75,7 +74,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private void doRootClicked() {
         crudDialogBox.showWindow(Fields.ROOT);
         crudDialogBox.setCommand(new Command() {
-            
+
             @Override
             public void executeCommand() {
                 rootHandler.executeRootHandler(crudDialogBox.getNodeData());
@@ -115,6 +114,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
             }
         });
     }
+
     private int getSelectedId() {
         return Integer.valueOf(selectedId);
     }
@@ -122,7 +122,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private Node getSelectedNode() {
         return selectedNode;
     }
-    
+
     private void doEditClicked() {
         crudDialogBox.showWindow(Fields.EDIT);
         crudDialogBox.setTextBoxData(getSelectedNode());
