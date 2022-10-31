@@ -5,20 +5,22 @@ import com.inobitec.tree.client.event.handler.ChildHandler;
 import com.inobitec.tree.client.event.handler.DeleteHandler;
 import com.inobitec.tree.client.event.handler.EditHandler;
 import com.inobitec.tree.client.event.handler.RootHandler;
+import com.inobitec.tree.shared.model.Node;
 
 public interface CrudPanelDisplay extends IsWidget {
 
     void setRootHandler(RootHandler handler);
-    
+
     void setChildHandler(ChildHandler handler);
-    
+
     void setEditHandler(EditHandler handler);
-    
+
     void setDeleteHandler(DeleteHandler handler);
-    
-    void setSelectedId(int selectedId);
+
+    void setSelectedNode(Node selectedNode);
+
+    void setSelectedId(int id);
     
     void setActiveButtons(boolean bool);
-    
-    int getSelectedId();
+
 }

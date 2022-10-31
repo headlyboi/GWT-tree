@@ -8,12 +8,8 @@ import com.inobitec.tree.shared.model.Node;
 
 public interface TreeTableDisplay extends IsWidget {
 
-    void setAllRootItems(List<Node> nodeList);
-
-    void setAllChildItems(List<Node> nodeList);
-
-    void clearAllRoodAndChildItems();
-
+    void setNodes(List<Node> nodeList);
+    
     Node getSelectedNode();
     
     void setSelectedNodeCommand(SelectedNodeCommand selectedNodeCommand);

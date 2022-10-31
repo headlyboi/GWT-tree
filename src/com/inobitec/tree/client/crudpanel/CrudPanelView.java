@@ -11,8 +11,9 @@ import com.inobitec.tree.client.event.handler.DeleteHandler;
 import com.inobitec.tree.client.event.handler.EditHandler;
 import com.inobitec.tree.client.event.handler.RootHandler;
 import com.inobitec.tree.client.widget.CrudDialogBox;
-import com.inobitec.tree.client.widget.Fields;
+import com.inobitec.tree.shared.Fields;
 import com.inobitec.tree.shared.command.Command;
+import com.inobitec.tree.shared.model.Node;
 
 public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private static final String ADD_ROOT_NODE = "Add root node";
@@ -29,6 +30,8 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private CrudDialogBox crudDialogBox;
     private HorizontalPanel horizontalPanel;
     private String selectedId = Fields.EMPTY_SYMBOL;
+    private Node selectedNode;
+    
 
     private RootHandler rootHandler;
     private ChildHandler childHandler;
@@ -36,8 +39,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private DeleteHandler deleteHandler;
 
     public CrudPanelView(String style) {
-        build();
-        horizontalPanel.setStyleName(style);
+        build(style);
         bindRootButtonClickHandler();
         bindChildButtonClickHandler();
         bindEditButtonClickHandler();
@@ -45,7 +47,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         initWidget(horizontalPanel);
     }
 
-    private void build() {
+    private void build(String style) {
         selectedNodeLabel = new Label(SELECTED_NODE_ID);
         horizontalPanel = new HorizontalPanel();
         rootNodeButton = new Button(ADD_ROOT_NODE);
@@ -58,6 +60,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         horizontalPanel.add(editButton);
         horizontalPanel.add(deleteButton);
         horizontalPanel.add(selectedNodeLabel);
+        horizontalPanel.setStyleName(style);
     }
 
     private void bindRootButtonClickHandler() {
@@ -72,6 +75,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private void doRootClicked() {
         crudDialogBox.showWindow(Fields.ROOT);
         crudDialogBox.setCommand(new Command() {
+            
             @Override
             public void executeCommand() {
                 rootHandler.executeRootHandler(crudDialogBox.getNodeData());
@@ -111,11 +115,17 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
             }
         });
     }
+    private int getSelectedId() {
+        return Integer.valueOf(selectedId);
+    }
 
-    public void doEditClicked() {
+    private Node getSelectedNode() {
+        return selectedNode;
+    }
+    
+    private void doEditClicked() {
         crudDialogBox.showWindow(Fields.EDIT);
-        crudDialogBox.setTextBoxData(editHandler.getSelectedNode());
-        crudDialogBox.setParentIdData(getSelectedId());
+        crudDialogBox.setTextBoxData(getSelectedNode());
         crudDialogBox.setCommand(new Command() {
 
             @Override
@@ -144,16 +154,6 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     @Override
-    public void setSelectedId(int id) {
-        if (id == Fields.EMPTY_ID) {
-            selectedNodeLabel.setText(SELECTED_NODE_ID + Fields.EMPTY_SYMBOL);
-            return;
-        }
-        selectedId = String.valueOf(id);
-        selectedNodeLabel.setText(SELECTED_NODE_ID + selectedId);
-    }
-
-    @Override
     public void setRootHandler(RootHandler rootHandler) {
         this.rootHandler = rootHandler;
     }
@@ -169,11 +169,6 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     @Override
-    public int getSelectedId() {
-        return Integer.valueOf(selectedId);
-    }
-
-    @Override
     public void setDeleteHandler(DeleteHandler deleteHandler) {
         this.deleteHandler = deleteHandler;
     }
@@ -185,4 +180,18 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         deleteButton.setEnabled(bool);
     }
 
+    @Override
+    public void setSelectedId(int id) {
+        if (id == Fields.EMPTY_ID) {
+            selectedNodeLabel.setText(SELECTED_NODE_ID + Fields.EMPTY_SYMBOL);
+            return;
+        }
+        selectedId = String.valueOf(id);
+        selectedNodeLabel.setText(SELECTED_NODE_ID + selectedId);
+    }
+
+    @Override
+    public void setSelectedNode(Node node) {
+        selectedNode = node;
+    }
 }

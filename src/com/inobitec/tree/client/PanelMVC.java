@@ -17,7 +17,7 @@ import com.inobitec.tree.client.selectedTable.SelectedTablePresenter;
 import com.inobitec.tree.client.selectedTable.SelectedTableView;
 import com.inobitec.tree.client.treetable.TreeTablePresenter;
 import com.inobitec.tree.client.treetable.TreeTableView;
-import com.inobitec.tree.client.widget.Fields;
+import com.inobitec.tree.shared.Fields;
 import com.inobitec.tree.shared.model.Node;
 
 public class PanelMVC extends Composite {
@@ -44,15 +44,6 @@ public class PanelMVC extends Composite {
 
     public PanelMVC() {
         build();
-        verticalPanel.add(headingElement);
-        treeTablePresenter.go(treeAndSelectedHorizontalPanel);
-        selectedTablePresenter.go(treeAndSelectedHorizontalPanel);
-        verticalPanel.add(treeAndSelectedHorizontalPanel);
-        crudPanelPresenter.go(verticalPanel);
-        allNodesPanelPresenter.go(verticalPanel);
-        if (selectedId == Fields.EMPTY_ID) {
-            crudPanelPresenter.setActiveButtons(false);
-        }
         addSelectedNodeEvent();
         addRootNodeEvent();
         addChildNodeEvent();
@@ -71,6 +62,15 @@ public class PanelMVC extends Composite {
         crudPanelPresenter = new CrudPanelPresenter(new CrudPanelView(STYLE_CRUD));
         allNodesPanelPresenter = new AllNodesPanelPresenter(
                 new AllNodesPanelView(STYLE_ALL_NODES_HEADER, WRAPPER_AN_TABLE));
+        verticalPanel.add(headingElement);
+        treeTablePresenter.go(treeAndSelectedHorizontalPanel);
+        selectedTablePresenter.go(treeAndSelectedHorizontalPanel);
+        verticalPanel.add(treeAndSelectedHorizontalPanel);
+        crudPanelPresenter.go(verticalPanel);
+        allNodesPanelPresenter.go(verticalPanel);
+        if (selectedId == Fields.EMPTY_ID) {
+            crudPanelPresenter.setActiveButtons(false);
+        }
     }
 
     private void update() {
@@ -82,7 +82,7 @@ public class PanelMVC extends Composite {
         crudPanelPresenter.setSelectedId(Fields.EMPTY_ID);
         selectedTablePresenter.clearData();
     }
-    
+
     // TODO Think about commands
     private void addRootNodeEvent() {
         crudPanelPresenter.setRootCommand(new RootCommand() {
@@ -118,12 +118,6 @@ public class PanelMVC extends Composite {
                 crudPanelPresenter.setActiveButtons(false);
 
             }
-
-            @Override
-            public Node getSelectedNode() {
-                return selectedNode;
-            }
-
         });
     }
 
@@ -142,7 +136,6 @@ public class PanelMVC extends Composite {
     private void addSelectedNodeEvent() {
 
         treeTablePresenter.setSelectedNodeCommand(new SelectedNodeCommand() {
-
             @Override
             public void executeSelectedNodeCommand() {
                 crudPanelPresenter.setActiveButtons(true);
@@ -150,6 +143,7 @@ public class PanelMVC extends Composite {
                 selectedId = selectedNode.getId();
                 selectedTablePresenter.updateNodeData(selectedNode);
                 crudPanelPresenter.setSelectedId(selectedId);
+                crudPanelPresenter.setSelectedNode(selectedNode);
             }
         });
     }

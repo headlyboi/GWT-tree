@@ -9,35 +9,33 @@ import com.inobitec.tree.client.TreeProject;
 import com.inobitec.tree.client.event.command.SelectedNodeCommand;
 import com.inobitec.tree.shared.model.Node;
 
-public class TreeTablePresenter{
+public class TreeTablePresenter {
 
     private TreeTableDisplay view;
 
     private SelectedNodeCommand selectedNodeCommand;
-    
+
     public TreeTablePresenter(TreeTableDisplay view) {
         this.view = view;
-        buildSelectedNodeHandler();
+        bindSelectedNodeHandler();
     }
 
-    private void buildSelectedNodeHandler() {
+    private void bindSelectedNodeHandler() {
         view.setSelectedNodeCommand(new SelectedNodeCommand() {
-            
+
             @Override
             public void executeSelectedNodeCommand() {
                 selectedNodeCommand.executeSelectedNodeCommand();
             }
         });
     }
-    
+
     private void getAllNodes() {
         TreeProject.treeService.getAllNodes(new AsyncCallback<List<Node>>() {
 
             @Override
             public void onSuccess(List<Node> listNode) {
-                view.clearAllRoodAndChildItems();
-                view.setAllRootItems(listNode);
-                view.setAllChildItems(listNode);
+                view.setNodes(listNode);
             }
 
             @Override
@@ -50,7 +48,7 @@ public class TreeTablePresenter{
     public void updateTree() {
         getAllNodes();
     }
-    
+
     public Node getSelectedNode() {
         return view.getSelectedNode();
     }

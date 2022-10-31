@@ -26,18 +26,18 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
     private SelectedNodeCommand selectedNodeCommand;
 
     public TreeTableView(String style) {
-        build();
-        verticalPanel.add(label);
-        tree.setStyleName(style);
-        verticalPanel.add(tree);
+        build(style);
         bindSelectionHandlerOnTreeTable();
         initWidget(verticalPanel);
     }
 
-    private void build() {
+    private void build(String style) {
         tree = new Tree();
         label = new Label(TREE);
         verticalPanel = new VerticalPanel();
+        verticalPanel.add(label);
+        tree.setStyleName(style);
+        verticalPanel.add(tree);
     }
 
     private void bindSelectionHandlerOnTreeTable() {
@@ -58,47 +58,18 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
                     }
                 }
                 selectedNodeCommand.executeSelectedNodeCommand();
-
             }
         });
     }
 
-    @Override
-    public void setAllRootItems(List<Node> nodeList) {
-        for (Node node : nodeList) {
-            if (node.getParentId() == -1) {
-                addRootItem(node);
-            }
-        }
-    }
-
-    @Override
-    public void setAllChildItems(List<Node> nodeList) {
-        for (Node node : nodeList) {
-            if (node.getParentId() != -1) {
-                addChildItem(node);
-            }
-        }
-    }
-
-    @Override
-    public void clearAllRoodAndChildItems() {
-        tree.clear();
-    }
-
-    @Override
-    public Node getSelectedNode() {
-        return (Node) tree.getSelectedItem().getUserObject();
-    }
-
-    public void addRootItem(Node node) {
+    private void addRootItem(Node node) {
         item = new TreeItem();
         item.setText(node.getName() + UNTOUCH);
         item.setUserObject(node);
         tree.addItem(item);
     }
 
-    public void addChildItem(Node node) {
+    private void addChildItem(Node node) {
         item = new TreeItem();
         item.setText(node.getName() + UNTOUCH);
         item.setUserObject(node);
@@ -116,35 +87,29 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
         }
     }
 
-    public void editNode(Node node) {
-        int id = node.getId();
-        Iterator<TreeItem> treeItemIterator = tree.treeItemIterator();
-        while (treeItemIterator.hasNext()) {
-            TreeItem itemFromTable = treeItemIterator.next();
-            Node nodeFromTable = (Node) itemFromTable.getUserObject();
-            if (id == nodeFromTable.getId()) {
-                itemFromTable.setText(node.getName() + UNTOUCH);
-                nodeFromTable.setName(node.getName());
-                nodeFromTable.setIp(node.getIp());
-                nodeFromTable.setPort(node.getPort());
+    private void clearAllRootAndChildNodes() {
+        tree.clear();
+    }
+
+    private void updateTreeNodes(List<Node> nodeList) {
+        for (Node node : nodeList) {
+            if (node.getParentId() == -1) {
+                addRootItem(node);
+            } else if (node.getParentId() != -1) {
+                addChildItem(node);
             }
         }
     }
 
-    public void deleteNode(Integer id) {
-        Iterator<TreeItem> treeItemIterator = tree.treeItemIterator();
-        while (treeItemIterator.hasNext()) {
-            TreeItem itemFromTable = treeItemIterator.next();
-            Node nodeFromTable = (Node) itemFromTable.getUserObject();
-            if (id == nodeFromTable.getId()) {
-                itemFromTable.remove();
-            }
-        }
+    @Override
+    public void setNodes(List<Node> nodeList) {
+        clearAllRootAndChildNodes();
+        updateTreeNodes(nodeList);
     }
 
-    public int getNodeId() {
-        Node node = getSelectedNode();
-        return node.getId();
+    @Override
+    public Node getSelectedNode() {
+        return (Node) tree.getSelectedItem().getUserObject();
     }
 
     @Override

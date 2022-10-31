@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.client.widget.Fields;
+import com.inobitec.tree.shared.Fields;
 import com.inobitec.tree.shared.model.Node;
 
 public class SelectedTableView extends Composite implements SelectedTableDisplay {
@@ -17,13 +17,11 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
     private VerticalPanel wrapperVerticalPanel;
 
     public SelectedTableView(String style, String wrapperStyle) {
-        build();
-        flexTable.setStyleName(style);
-        wrapperVerticalPanel.setStyleName(wrapperStyle);
+        build(style, wrapperStyle);
         initWidget(selectedVerticalPanel);
     }
 
-    private void build() {
+    private void build(String style, String wrapperStyle) {
         wrapperVerticalPanel = new VerticalPanel();
         selectedVerticalPanel = new VerticalPanel();
         flexTable = new FlexTable();
@@ -31,39 +29,41 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
         selectedVerticalPanel.add(selectedLabel);
 
         flexTable.setBorderWidth(1);
-        flexTable.setText(Fields.FIRST_ROW, Fields.FIRST_COL, Fields.ID);
-        flexTable.setText(Fields.SECOND_ROW, Fields.FIRST_COL, Fields.PARENT_ID);
-        flexTable.setText(Fields.THIRD_ROW, Fields.FIRST_COL, Fields.NAME);
-        flexTable.setText(Fields.FOURTH_ROW, Fields.FIRST_COL, Fields.IP);
-        flexTable.setText(Fields.FIFTH_ROW, Fields.FIRST_COL, Fields.PORT);
+        flexTable.setText(Fields.ID_NODE_ROW, Fields.ID_NODE_COL, Fields.ID);
+        flexTable.setText(Fields.PARENT_ID_NODE_ROW, Fields.ID_NODE_COL, Fields.PARENT_ID);
+        flexTable.setText(Fields.NAME_NODE_ROW, Fields.ID_NODE_COL, Fields.NAME);
+        flexTable.setText(Fields.IP_NODE_ROW, Fields.ID_NODE_COL, Fields.IP);
+        flexTable.setText(Fields.PORT_NODE_ROW, Fields.ID_NODE_COL, Fields.PORT);
 
         wrapperVerticalPanel.add(flexTable);
         selectedVerticalPanel.add(wrapperVerticalPanel);
+        flexTable.setStyleName(style);
+        wrapperVerticalPanel.setStyleName(wrapperStyle);
     }
 
     @Override
     public void setNodeData(Node node) {
-        flexTable.setText(Fields.FIRST_ROW, Fields.SECOND_COL, String.valueOf(node.getId()));
+        flexTable.setText(Fields.ID_NODE_ROW, Fields.PARENT_ID_NODE_COL, String.valueOf(node.getId()));
         int parentId = node.getParentId();
         if (parentId == Fields.EMPTY_ID) {
-            flexTable.setText(Fields.SECOND_ROW, Fields.SECOND_COL, Fields.EMPTY_SYMBOL);
+            flexTable.setText(Fields.PARENT_ID_NODE_ROW, Fields.PARENT_ID_NODE_COL, Fields.EMPTY_SYMBOL);
         } else {
-            flexTable.setText(Fields.SECOND_ROW, Fields.SECOND_COL, String.valueOf(parentId));
+            flexTable.setText(Fields.PARENT_ID_NODE_ROW, Fields.PARENT_ID_NODE_COL, String.valueOf(parentId));
         }
 
-        flexTable.setText(Fields.THIRD_ROW, Fields.SECOND_COL, node.getName());
-        flexTable.setText(Fields.FOURTH_ROW, Fields.SECOND_COL, node.getIp());
-        flexTable.setText(Fields.FIFTH_ROW, Fields.SECOND_COL, node.getPort());
+        flexTable.setText(Fields.NAME_NODE_ROW, Fields.PARENT_ID_NODE_COL, node.getName());
+        flexTable.setText(Fields.IP_NODE_ROW, Fields.PARENT_ID_NODE_COL, node.getIp());
+        flexTable.setText(Fields.PORT_NODE_ROW, Fields.PARENT_ID_NODE_COL, node.getPort());
     }
 
     @Override
     public void clearData() {
 
-        flexTable.removeCell(Fields.FIRST_ROW, Fields.SECOND_COL);
-        flexTable.removeCell(Fields.SECOND_ROW, Fields.SECOND_COL);
-        flexTable.removeCell(Fields.THIRD_ROW, Fields.SECOND_COL);
-        flexTable.removeCell(Fields.FOURTH_ROW, Fields.SECOND_COL);
-        flexTable.removeCell(Fields.FIFTH_ROW, Fields.SECOND_COL);
+        flexTable.removeCell(Fields.ID_NODE_ROW, Fields.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Fields.PARENT_ID_NODE_ROW, Fields.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Fields.NAME_NODE_ROW, Fields.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Fields.IP_NODE_ROW, Fields.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Fields.PORT_NODE_ROW, Fields.PARENT_ID_NODE_COL);
 
     }
 }

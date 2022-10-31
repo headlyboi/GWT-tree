@@ -88,11 +88,6 @@ public class CrudPanelPresenter {
             public void executeEditHandler(Node node, int selectedId) {
                 editNode(node, selectedId);
             }
-
-            @Override
-            public Node getSelectedNode() {
-                return editCommand.getSelectedNode();
-            }
         });
     }
 
@@ -140,14 +135,14 @@ public class CrudPanelPresenter {
         view.setActiveButtons(bool);
     }
     
-    public void setSelectedId(int selectedId) {
-        view.setSelectedId(selectedId);
+    public void setSelectedNode(Node selectedNode) {
+        view.setSelectedNode(selectedNode);
     }
 
-    public int getSelectedId() {
-        return view.getSelectedId();
+    public void setSelectedId(int id) {
+        view.setSelectedId(id);
     }
-
+    
     public void setRootCommand(RootCommand rootCommand) {
         this.rootCommand = rootCommand;
     }
