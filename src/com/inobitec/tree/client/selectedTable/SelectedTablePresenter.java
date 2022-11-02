@@ -19,7 +19,7 @@ public class SelectedTablePresenter{
         view.setNodeData(node);
     }
     
-    public void clearData() {
-        view.clearData();
+    public void cleanData() {
+        view.cleanData();
     }
 }

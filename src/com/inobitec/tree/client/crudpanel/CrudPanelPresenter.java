@@ -28,7 +28,7 @@ public class CrudPanelPresenter {
         bindEditClickHandler();
         bindDeleteClickHandler();
     }
-    
+
     private void bindRootHandler() {
         view.setRootHandler(new RootHandler() {
 
@@ -84,13 +84,13 @@ public class CrudPanelPresenter {
 
             @Override
             public void executeEditHandler(Node node, int selectedId) {
-                editNode(node, selectedId);
+                editNodeById(node, selectedId);
             }
         });
     }
 
-    private void editNode(Node node, int selectedId) {
-        TreeProject.treeService.editNode(node, selectedId, new AsyncCallback<Node>() {
+    private void editNodeById(Node node, int selectedId) {
+        TreeProject.treeService.editNodeById(node, selectedId, new AsyncCallback<Node>() {
 
             @Override
             public void onSuccess(Node node) {
@@ -115,7 +115,7 @@ public class CrudPanelPresenter {
     }
 
     private void deleteNode(int selectedId) {
-        TreeProject.treeService.deleteNode(selectedId, new AsyncCallback<Void>() {
+        TreeProject.treeService.deleteNodeById(selectedId, new AsyncCallback<Void>() {
 
             @Override
             public void onSuccess(Void result) {

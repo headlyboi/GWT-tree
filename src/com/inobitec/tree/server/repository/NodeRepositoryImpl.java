@@ -1,4 +1,4 @@
-package com.inobitec.tree.server;
+package com.inobitec.tree.server.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,38 +9,38 @@ import java.util.stream.Collectors;
 
 import com.inobitec.tree.shared.model.Node;
 
-public class NodeCache {
+public class NodeRepositoryImpl implements NodeRepository {
     // key - node id
     private ConcurrentMap<Integer, Node> nodeMap = new ConcurrentHashMap<>();
 
-    private static int lastId = 0;
+    private static int lastId = 1;
 
-    public Node addRootNode(Node child) {
+    public Node addRootNode(Node node) {
         Node value = new Node();
         value.setId(lastId++);
         value.setParentId(-1);
-        value.setName(child.getName());
-        value.setIp(child.getIp());
-        value.setPort(child.getPort());
+        value.setName(node.getName());
+        value.setIp(node.getIp());
+        value.setPort(node.getPort());
         nodeMap.put(value.getId(), value);
         return value;
     }
 
-    public Node addChildNode(Node child, Integer parentId) {
+    public Node addChildNode(Node node, Integer parentId) {
         Node value = new Node();
         if (!nodeMap.containsKey(parentId)) {
             return null;
         }
         value.setId(lastId++);
         value.setParentId(parentId);
-        value.setName(child.getName());
-        value.setIp(child.getIp());
-        value.setPort(child.getPort());
+        value.setName(node.getName());
+        value.setIp(node.getIp());
+        value.setPort(node.getPort());
         nodeMap.put(value.getId(), value);
         return value;
     }
 
-    public Node editNode(Node node, Integer id) {
+    public Node editNodeById(Node node, Integer id) {
         if (nodeMap.get(id) == null) {
             return null;
         }
@@ -51,7 +51,7 @@ public class NodeCache {
         return oldNode;
     }
 
-    public void deleteNode(Integer id) {
+    public void deleteNodeById(Integer id) {
         List<Integer> keysToDelete = new ArrayList<>();
         keysToDelete.add(id);
 

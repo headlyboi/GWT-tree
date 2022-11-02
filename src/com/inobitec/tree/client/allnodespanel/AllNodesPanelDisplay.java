@@ -8,5 +8,6 @@ import com.inobitec.tree.shared.model.Node;
 
 public interface AllNodesPanelDisplay extends IsWidget {
     void setAllNodesTable(List<Node> nodeList);
+
     void setRefreshCommand(RefreshCommand refreshCommand);
 }

@@ -12,9 +12,9 @@ public interface TreeService extends RemoteService {
 
     Node addChildNode(Node node, Integer parentId) ;
 
-    Node editNode(Node node, Integer id);
+    Node editNodeById(Node node, Integer id);
 
-    void deleteNode(Integer id);
+    void deleteNodeById(Integer id);
     
     List<Node> getAllNodes();
 }

@@ -44,7 +44,7 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
     private FlexTable flexTable;
 
     private RefreshCommand refreshCommand;
-    
+
     public AllNodesPanelView(String headerStyle, String wrapperStyle) {
         build(headerStyle, wrapperStyle);
         buildFields();
@@ -88,17 +88,17 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
         wrapperVerticalPanel.add(flexTable);
         verticalPanel.add(wrapperVerticalPanel);
     }
-    
+
     private void bindRefreshButton() {
         refreshButton.addClickHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 refreshCommand.executeRefreshCommand();
             }
         });
     }
-    
+
     @Override
     public void setAllNodesTable(List<Node> nodeList) {
         flexTable.removeAllRows();
@@ -124,7 +124,7 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
         flexTable.getColumnFormatter().setStyleName(Fields.IP_NODE_COL, STYLE_ALL_NODES_IP + STYLE_COLUMN);
         flexTable.getColumnFormatter().setStyleName(Fields.PORT_NODE_COL, STYLE_ALL_NODES_PORT + STYLE_COLUMN);
     }
-    
+
     @Override
     public void setRefreshCommand(RefreshCommand refreshCommand) {
         this.refreshCommand = refreshCommand;

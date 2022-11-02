@@ -18,7 +18,7 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
     private static final String TREE = "Tree: ";
     private static final String TOUCH = "(*)";
     private static final String UNTOUCH = "(.)";
-    private Tree tree = new Tree();
+    private Tree tree;
     private Label label;
     private VerticalPanel verticalPanel;
     private TreeItem item;

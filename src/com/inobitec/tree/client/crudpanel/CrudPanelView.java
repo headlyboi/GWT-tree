@@ -23,9 +23,9 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private static final String SELECTED_NODE_ID = "selected node id = ";
 
     private Button rootNodeButton;
-    private Button childButton;
-    private Button editButton;
-    private Button deleteButton;
+    private Button childNodeButton;
+    private Button editNodeButton;
+    private Button deleteNodeButton;
     private Label selectedNodeLabel;
     private CrudDialogBox crudDialogBox;
     private HorizontalPanel horizontalPanel;
@@ -50,14 +50,14 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         selectedNodeLabel = new Label(SELECTED_NODE_ID);
         horizontalPanel = new HorizontalPanel();
         rootNodeButton = new Button(ADD_ROOT_NODE);
-        childButton = new Button(ADD_CHILD);
-        editButton = new Button(EDIT);
-        deleteButton = new Button(DELETE);
+        childNodeButton = new Button(ADD_CHILD);
+        editNodeButton = new Button(EDIT);
+        deleteNodeButton = new Button(DELETE);
         crudDialogBox = new CrudDialogBox();
         horizontalPanel.add(rootNodeButton);
-        horizontalPanel.add(childButton);
-        horizontalPanel.add(editButton);
-        horizontalPanel.add(deleteButton);
+        horizontalPanel.add(childNodeButton);
+        horizontalPanel.add(editNodeButton);
+        horizontalPanel.add(deleteNodeButton);
         horizontalPanel.add(selectedNodeLabel);
         horizontalPanel.setStyleName(style);
     }
@@ -83,7 +83,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     private void bindChildButtonClickHandler() {
-        childButton.addClickHandler(new ClickHandler() {
+        childNodeButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -106,7 +106,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     private void bindEditButtonClickHandler() {
-        editButton.addClickHandler(new ClickHandler() {
+        editNodeButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -137,7 +137,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     private void bindDeleteButtonClickHandler() {
-        deleteButton.addClickHandler(new ClickHandler() {
+        deleteNodeButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -175,9 +175,9 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
 
     @Override
     public void setActiveButtons(boolean bool) {
-        childButton.setEnabled(bool);
-        editButton.setEnabled(bool);
-        deleteButton.setEnabled(bool);
+        childNodeButton.setEnabled(bool);
+        editNodeButton.setEnabled(bool);
+        deleteNodeButton.setEnabled(bool);
     }
 
     @Override

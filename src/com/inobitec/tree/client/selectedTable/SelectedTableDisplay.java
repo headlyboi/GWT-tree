@@ -7,5 +7,5 @@ public interface SelectedTableDisplay extends IsWidget {
 
     void setNodeData(Node node);
 
-    void clearData();
+    void cleanData();
 }

@@ -43,7 +43,7 @@ public class PanelMVC extends Composite {
         build();
         addSelectedNodeEvent();
         addCrudEvent();
-        update();
+        updateTables();
         initWidget(verticalPanel);
     }
 
@@ -67,14 +67,14 @@ public class PanelMVC extends Composite {
         }
     }
 
-    private void update() {
+    private void updateTables() {
         treeTablePresenter.updateTree();
         allNodesPanelPresenter.updateAllNodes();
     }
 
     private void clearSelection() {
         crudPanelPresenter.setSelectedId(Fields.EMPTY_ID);
-        selectedTablePresenter.clearData();
+        selectedTablePresenter.cleanData();
     }
 
     private void addCrudEvent() {
@@ -82,7 +82,7 @@ public class PanelMVC extends Composite {
 
             @Override
             public void executeCrudCommand() {
-                update();
+                updateTables();
                 clearSelection();
                 crudPanelPresenter.setActiveButtons(false);
             }

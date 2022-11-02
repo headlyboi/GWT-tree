@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inobitec.tree.server.mapper.NodeMapper">
+
+    <resultMap id="nodeMap"
+        type="com.inobitec.tree.shared.model.Node">
+        <result property="id" column="id" />
+        <result property="parentId" column="parent_id" />
+        <result property="name" column="name" />
+        <result property="ip" column="ip" />
+        <result property="port" column="port" />
+    </resultMap>
+
+
+
+    <select id="addRootNode"
+        parameterType="com.inobitec.tree.shared.model.Node"
+        resultType="Integer">
+        INSERT INTO node (id, parent_id, name, ip, port)
+        VALUES (NEXTVAL('NODE_SEQ'), -1, #{name}, #{ip}, #{port})
+        RETURNING id;
+    </select>
+
+    <select id="addChildNode"
+        parameterType="com.inobitec.tree.shared.model.Node"
+        resultType="Integer">
+        INSERT INTO node (id, parent_id, name, ip, port)
+        VALUES (NEXTVAL('NODE_SEQ'), #{parentId}, #{node.name}, #{node.ip}, #{node.port})
+        RETURNING id;
+    </select>
+
+
+    <select id="getNodeById" parameterType="Integer"
+        resultMap="nodeMap">
+        SELECT node.ID, node.PARENT_ID, node.NAME, node.IP, node.PORT
+        FROM node
+        WHERE node.ID = #{id}
+    </select>
+
+    <select id="getAllNodes" resultMap="nodeMap">
+        SELECT node.ID,
+        node.PARENT_ID, node.NAME, node.IP, node.PORT
+        FROM node
+    </select>
+
+    <update id="editNodeById">
+        UPDATE node
+        SET name = #{node.name},
+            ip = #{node.ip},
+            port = #{node.port}
+        WHERE id = #{id};
+    </update>
+
+    <delete id = "deleteNodeById">
+        DELETE FROM node WHERE id = #{id};
+    </delete>
+
+</mapper>

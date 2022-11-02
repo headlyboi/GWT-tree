@@ -10,9 +10,9 @@ public interface TreeServiceAsync {
 
     void addChildNode(Node node, Integer parentId, AsyncCallback<Node> callback);
 
-    void editNode(Node node, Integer id, AsyncCallback<Node> callback);
+    void editNodeById(Node node, Integer id, AsyncCallback<Node> callback);
 
-    void deleteNode(Integer id, AsyncCallback<Void> callback);
+    void deleteNodeById(Integer id, AsyncCallback<Void> callback);
 
     void getAllNodes(AsyncCallback<List<Node>> callback);
 }

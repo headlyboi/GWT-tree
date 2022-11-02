@@ -57,7 +57,7 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
     }
 
     @Override
-    public void clearData() {
+    public void cleanData() {
 
         flexTable.removeCell(Fields.ID_NODE_ROW, Fields.PARENT_ID_NODE_COL);
         flexTable.removeCell(Fields.PARENT_ID_NODE_ROW, Fields.PARENT_ID_NODE_COL);
