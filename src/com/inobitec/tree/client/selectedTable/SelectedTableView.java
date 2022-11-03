@@ -44,7 +44,7 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
     @Override
     public void setNodeData(Node node) {
         flexTable.setText(Fields.ID_NODE_ROW, Fields.PARENT_ID_NODE_COL, String.valueOf(node.getId()));
-        int parentId = node.getParentId();
+        Integer parentId = node.getParentId();
         if (parentId == Fields.EMPTY_ID) {
             flexTable.setText(Fields.PARENT_ID_NODE_ROW, Fields.PARENT_ID_NODE_COL, Fields.EMPTY_SYMBOL);
         } else {

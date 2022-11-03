@@ -18,8 +18,8 @@
     <select id="addRootNode"
         parameterType="com.inobitec.tree.shared.model.Node"
         resultType="Integer">
-        INSERT INTO node (id, parent_id, name, ip, port)
-        VALUES (NEXTVAL('NODE_SEQ'), -1, #{name}, #{ip}, #{port})
+        INSERT INTO node (id, name, ip, port)
+        VALUES (NEXTVAL('NODE_SEQ'),#{name}, #{ip}, #{port})
         RETURNING id;
     </select>
 
@@ -40,8 +40,7 @@
     </select>
 
     <select id="getAllNodes" resultMap="nodeMap">
-        SELECT node.ID,
-        node.PARENT_ID, node.NAME, node.IP, node.PORT
+        SELECT node.ID, node.PARENT_ID, node.NAME, node.IP, node.PORT
         FROM node
     </select>
 

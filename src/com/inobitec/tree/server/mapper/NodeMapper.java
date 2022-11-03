@@ -1,7 +1,6 @@
 package com.inobitec.tree.server.mapper;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,6 +18,6 @@ public interface NodeMapper {
     void editNodeById(@Param("node") Node node, @Param("id") Integer id);
 
     void deleteNodeById(Integer id);
-
+    
     List<Node> getAllNodes();
 }

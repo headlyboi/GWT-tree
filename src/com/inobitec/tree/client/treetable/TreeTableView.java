@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.inobitec.tree.client.event.command.SelectedNodeCommand;
+import com.inobitec.tree.shared.Fields;
 import com.inobitec.tree.shared.model.Node;
 
 public class TreeTableView extends Composite implements TreeTableDisplay {
@@ -93,9 +94,9 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
 
     private void updateTreeNodes(List<Node> nodeList) {
         for (Node node : nodeList) {
-            if (node.getParentId() == -1) {
+            if (node.getParentId() == Fields.EMPTY_ID) {
                 addRootItem(node);
-            } else if (node.getParentId() != -1) {
+            } else if (node.getParentId() != Fields.EMPTY_ID) {
                 addChildItem(node);
             }
         }

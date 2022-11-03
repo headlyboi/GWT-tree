@@ -37,7 +37,7 @@ public class PanelMVC extends Composite {
     private AllNodesPanelPresenter allNodesPanelPresenter;
 
     private Node selectedNode;
-    private int selectedId = Fields.EMPTY_ID;
+    private Integer selectedId = Fields.EMPTY_ID;
 
     public PanelMVC() {
         build();
@@ -82,9 +82,9 @@ public class PanelMVC extends Composite {
 
             @Override
             public void executeCrudCommand() {
+                crudPanelPresenter.setActiveButtons(false);
                 updateTables();
                 clearSelection();
-                crudPanelPresenter.setActiveButtons(false);
             }
         });
     }

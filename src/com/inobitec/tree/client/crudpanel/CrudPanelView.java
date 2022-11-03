@@ -181,7 +181,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     @Override
-    public void setSelectedId(int id) {
+    public void setSelectedId(Integer id) {
         if (id == Fields.EMPTY_ID) {
             selectedNodeLabel.setText(SELECTED_NODE_ID + Fields.EMPTY_SYMBOL);
             return;

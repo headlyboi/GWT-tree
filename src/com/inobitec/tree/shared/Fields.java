@@ -27,5 +27,5 @@ public class Fields {
     public static final int PORT_NODE_ROW = 4;
     
     
-    public static final int EMPTY_ID = -1;
+    public static final Integer EMPTY_ID = null;
 }
