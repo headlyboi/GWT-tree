@@ -2,7 +2,6 @@ package com.inobitec.tree.server.dao;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class NodeDao implements NodeRepository {
     }
 
     @Override
-//    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public Node editNodeById(Node node, Integer id) {
         nodeMapper.editNodeById(node, id);
         return node;

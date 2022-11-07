@@ -6,7 +6,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.inobitec.tree.client.TreeProject;
-import com.inobitec.tree.client.event.command.RefreshCommand;
 import com.inobitec.tree.shared.model.Node;
 
 public class AllNodesPanelPresenter {
@@ -15,7 +14,6 @@ public class AllNodesPanelPresenter {
 
     public AllNodesPanelPresenter(AllNodesPanelDisplay view) {
         this.view = view;
-        bindRefreshEvent();
     }
 
     private void getAllNodes() {
@@ -32,17 +30,7 @@ public class AllNodesPanelPresenter {
             }
         });
     }
-
-    private void bindRefreshEvent() {
-        view.setRefreshCommand(new RefreshCommand() {
-
-            @Override
-            public void executeRefreshCommand() {
-                updateAllNodes();
-            }
-        });
-    }
-
+    
     public void updateAllNodes() {
         getAllNodes();
     }

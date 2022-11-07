@@ -10,7 +10,8 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.client.event.command.RefreshCommand;
+import com.inobitec.tree.client.event.EventBus;
+import com.inobitec.tree.client.event.UpdateEvent;
 import com.inobitec.tree.shared.Fields;
 import com.inobitec.tree.shared.model.Node;
 
@@ -42,8 +43,6 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
     private HorizontalPanel fieldsHorizontalPanel;
     private VerticalPanel wrapperVerticalPanel;
     private FlexTable flexTable;
-
-    private RefreshCommand refreshCommand;
 
     public AllNodesPanelView(String headerStyle, String wrapperStyle) {
         build(headerStyle, wrapperStyle);
@@ -94,7 +93,7 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
 
             @Override
             public void onClick(ClickEvent event) {
-                refreshCommand.executeRefreshCommand();
+                EventBus.getInstance().fireEvent(new UpdateEvent());
             }
         });
     }
@@ -125,8 +124,4 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
         flexTable.getColumnFormatter().setStyleName(Fields.PORT_NODE_COL, STYLE_ALL_NODES_PORT + STYLE_COLUMN);
     }
 
-    @Override
-    public void setRefreshCommand(RefreshCommand refreshCommand) {
-        this.refreshCommand = refreshCommand;
-    }
 }

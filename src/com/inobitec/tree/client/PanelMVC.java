@@ -1,5 +1,6 @@
 package com.inobitec.tree.client;
 
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -8,8 +9,11 @@ import com.inobitec.tree.client.allnodespanel.AllNodesPanelPresenter;
 import com.inobitec.tree.client.allnodespanel.AllNodesPanelView;
 import com.inobitec.tree.client.crudpanel.CrudPanelPresenter;
 import com.inobitec.tree.client.crudpanel.CrudPanelView;
-import com.inobitec.tree.client.event.command.CrudCommand;
-import com.inobitec.tree.client.event.command.SelectedNodeCommand;
+import com.inobitec.tree.client.event.EventBus;
+import com.inobitec.tree.client.event.SelectedNodeEvent;
+import com.inobitec.tree.client.event.SelectedNodeHandler;
+import com.inobitec.tree.client.event.UpdateEvent;
+import com.inobitec.tree.client.event.UpdateHandler;
 import com.inobitec.tree.client.selectedTable.SelectedTablePresenter;
 import com.inobitec.tree.client.selectedTable.SelectedTableView;
 import com.inobitec.tree.client.treetable.TreeTablePresenter;
@@ -39,10 +43,12 @@ public class PanelMVC extends Composite {
     private Node selectedNode;
     private Integer selectedId = Fields.EMPTY_ID;
 
+    private SimpleEventBus eventBus = EventBus.getInstance();
+
     public PanelMVC() {
         build();
         addSelectedNodeEvent();
-        addCrudEvent();
+        addUpdateEvent();
         updateTables();
         initWidget(verticalPanel);
     }
@@ -77,11 +83,12 @@ public class PanelMVC extends Composite {
         selectedTablePresenter.cleanData();
     }
 
-    private void addCrudEvent() {
-        crudPanelPresenter.setCrudCommand(new CrudCommand() {
+    private void addUpdateEvent() {
+
+        eventBus.addHandler(UpdateEvent.TYPE, new UpdateHandler() {
 
             @Override
-            public void executeCrudCommand() {
+            public void onUpdate(UpdateEvent rootEvent) {
                 crudPanelPresenter.setActiveButtons(false);
                 updateTables();
                 clearSelection();
@@ -91,9 +98,10 @@ public class PanelMVC extends Composite {
 
     private void addSelectedNodeEvent() {
 
-        treeTablePresenter.setSelectedNodeCommand(new SelectedNodeCommand() {
+        eventBus.addHandler(SelectedNodeEvent.TYPE, new SelectedNodeHandler() {
+
             @Override
-            public void executeSelectedNodeCommand() {
+            public void onSelectedNode(SelectedNodeEvent selectedNodeEvent) {
                 crudPanelPresenter.setActiveButtons(true);
                 selectedNode = treeTablePresenter.getSelectedNode();
                 selectedId = selectedNode.getId();

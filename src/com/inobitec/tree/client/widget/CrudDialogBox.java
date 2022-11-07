@@ -219,7 +219,7 @@ public class CrudDialogBox extends Composite {
         this.portTextBox.setValue(node.getPort());
 
         int parentIdFromNode = node.getParentId();
-        if (parentIdFromNode == -1) {
+        if (parentIdFromNode == Fields.EMPTY_ID) {
             this.parentIdTextBox.setText(Fields.EMPTY_SYMBOL);
             return;
         }

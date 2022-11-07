@@ -2,14 +2,16 @@ package com.inobitec.tree.client.crudpanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.inobitec.tree.client.event.handler.ChildHandler;
+import com.inobitec.tree.client.event.ChildEvent;
+import com.inobitec.tree.client.event.EditEvent;
+import com.inobitec.tree.client.event.EventBus;
+import com.inobitec.tree.client.event.RootEvent;
 import com.inobitec.tree.client.event.handler.DeleteHandler;
-import com.inobitec.tree.client.event.handler.EditHandler;
-import com.inobitec.tree.client.event.handler.RootHandler;
 import com.inobitec.tree.client.widget.CrudDialogBox;
 import com.inobitec.tree.shared.Fields;
 import com.inobitec.tree.shared.command.Command;
@@ -32,9 +34,6 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private String selectedId = Fields.EMPTY_SYMBOL;
     private Node selectedNode;
 
-    private RootHandler rootHandler;
-    private ChildHandler childHandler;
-    private EditHandler editHandler;
     private DeleteHandler deleteHandler;
 
     public CrudPanelView(String style) {
@@ -45,6 +44,12 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         bindDeleteButtonClickHandler();
         initWidget(horizontalPanel);
     }
+
+    private int getSelectedId() {
+        return Integer.valueOf(selectedId);
+    }
+
+
 
     private void build(String style) {
         selectedNodeLabel = new Label(SELECTED_NODE_ID);
@@ -77,7 +82,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
 
             @Override
             public void executeCommand() {
-                rootHandler.executeRootHandler(crudDialogBox.getNodeData());
+                EventBus.getInstance().fireEvent(new RootEvent(crudDialogBox.getNodeData()));
             }
         });
     }
@@ -99,7 +104,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
 
             @Override
             public void executeCommand() {
-                childHandler.executeChildHandler(crudDialogBox.getNodeData(), getSelectedId());
+                EventBus.getInstance().fireEvent(new ChildEvent(crudDialogBox.getNodeData(), getSelectedId()));
             }
 
         });
@@ -115,14 +120,6 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         });
     }
 
-    private int getSelectedId() {
-        return Integer.valueOf(selectedId);
-    }
-
-    private Node getSelectedNode() {
-        return selectedNode;
-    }
-
     private void doEditClicked() {
         crudDialogBox.showWindow(Fields.EDIT);
         crudDialogBox.setTextBoxData(getSelectedNode());
@@ -130,7 +127,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
 
             @Override
             public void executeCommand() {
-                editHandler.executeEditHandler(crudDialogBox.getNodeData(), getSelectedId());
+                EventBus.getInstance().fireEvent(new EditEvent(crudDialogBox.getNodeData(), getSelectedId()));
             }
 
         });
@@ -154,21 +151,6 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     @Override
-    public void setRootHandler(RootHandler rootHandler) {
-        this.rootHandler = rootHandler;
-    }
-
-    @Override
-    public void setChildHandler(ChildHandler childHandler) {
-        this.childHandler = childHandler;
-
-    }
-
-    public void setEditHandler(EditHandler editHandler) {
-        this.editHandler = editHandler;
-    }
-
-    @Override
     public void setDeleteHandler(DeleteHandler deleteHandler) {
         this.deleteHandler = deleteHandler;
     }
@@ -182,6 +164,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
 
     @Override
     public void setSelectedId(Integer id) {
+
         if (id == Fields.EMPTY_ID) {
             selectedNodeLabel.setText(SELECTED_NODE_ID + Fields.EMPTY_SYMBOL);
             return;
@@ -193,5 +176,9 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     @Override
     public void setSelectedNode(Node node) {
         selectedNode = node;
+    }
+
+    private Node getSelectedNode() {
+        return selectedNode;
     }
 }

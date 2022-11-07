@@ -1,21 +1,26 @@
 package com.inobitec.tree.client.crudpanel;
 
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.inobitec.tree.client.TreeProject;
-import com.inobitec.tree.client.event.command.CrudCommand;
-import com.inobitec.tree.client.event.handler.ChildHandler;
+import com.inobitec.tree.client.event.ChildEvent;
+import com.inobitec.tree.client.event.EditEvent;
+import com.inobitec.tree.client.event.EditHandler;
+import com.inobitec.tree.client.event.EventBus;
+import com.inobitec.tree.client.event.RootEvent;
+import com.inobitec.tree.client.event.RootHandler;
+import com.inobitec.tree.client.event.UpdateEvent;
 import com.inobitec.tree.client.event.handler.DeleteHandler;
-import com.inobitec.tree.client.event.handler.EditHandler;
-import com.inobitec.tree.client.event.handler.RootHandler;
 import com.inobitec.tree.shared.model.Node;
 
+//FIXME Edit give a fuck
 public class CrudPanelPresenter {
 
     private CrudPanelDisplay view;
 
-    private CrudCommand crudCommand;
+    private SimpleEventBus eventBus = EventBus.getInstance();
 
     public CrudPanelPresenter(CrudPanelDisplay view) {
         this.view = view;
@@ -30,13 +35,15 @@ public class CrudPanelPresenter {
     }
 
     private void bindRootHandler() {
-        view.setRootHandler(new RootHandler() {
 
+        eventBus.addHandler(RootEvent.TYPE, new RootHandler() {
+            
             @Override
-            public void executeRootHandler(Node node) {
+            public void executeRootHandler(RootEvent handler, Node node) {
                 addRootNode(node);
             }
         });
+        
     }
 
     private void addRootNode(Node node) {
@@ -44,7 +51,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                crudCommand.executeCrudCommand();
+                eventBus.fireEvent(new UpdateEvent());
             }
 
             @Override
@@ -55,11 +62,12 @@ public class CrudPanelPresenter {
     }
 
     private void bindChildHandler() {
-        view.setChildHandler(new ChildHandler() {
-
+        
+        eventBus.addHandler(ChildEvent.TYPE, new com.inobitec.tree.client.event.ChildHandler() {
+            
             @Override
-            public void executeChildHandler(Node node, int selectedId) {
-                addChildNode(node, selectedId);
+            public void executeChildHandler(ChildEvent childEvent, Node node, int selectedId) {
+               addChildNode(node, selectedId);
             }
         });
     }
@@ -69,7 +77,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                crudCommand.executeCrudCommand();
+                eventBus.fireEvent(new UpdateEvent());
             }
 
             @Override
@@ -80,10 +88,10 @@ public class CrudPanelPresenter {
     }
 
     private void bindEditClickHandler() {
-        view.setEditHandler(new EditHandler() {
-
+        eventBus.addHandler(EditEvent.TYPE, new EditHandler() {
+            
             @Override
-            public void executeEditHandler(Node node, int selectedId) {
+            public void executeEditHandler(EditEvent editEvent, Node node, int selectedId) {
                 editNodeById(node, selectedId);
             }
         });
@@ -94,7 +102,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                crudCommand.executeCrudCommand();
+                eventBus.fireEvent(new UpdateEvent());
             }
 
             @Override
@@ -119,7 +127,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Void result) {
-                crudCommand.executeCrudCommand();
+                eventBus.fireEvent(new UpdateEvent());
             }
 
             @Override
@@ -137,12 +145,8 @@ public class CrudPanelPresenter {
         view.setSelectedNode(selectedNode);
     }
 
-    public void setSelectedId(int id) {
+    public void setSelectedId(Integer id) {
         view.setSelectedId(id);
-    }
-
-    public void setCrudCommand(CrudCommand crudCommand) {
-        this.crudCommand = crudCommand;
     }
 
     public void go(HasWidgets container) {

@@ -10,7 +10,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.client.event.command.SelectedNodeCommand;
+import com.inobitec.tree.client.event.EventBus;
+import com.inobitec.tree.client.event.SelectedNodeEvent;
 import com.inobitec.tree.shared.Fields;
 import com.inobitec.tree.shared.model.Node;
 
@@ -23,8 +24,6 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
     private Label label;
     private VerticalPanel verticalPanel;
     private TreeItem item;
-
-    private SelectedNodeCommand selectedNodeCommand;
 
     public TreeTableView(String style) {
         build(style);
@@ -58,7 +57,7 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
                         itemFromTable.setText(nodeFromTable.getName() + UNTOUCH);
                     }
                 }
-                selectedNodeCommand.executeSelectedNodeCommand();
+                EventBus.getInstance().fireEvent(new SelectedNodeEvent());
             }
         });
     }
@@ -111,11 +110,6 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
     @Override
     public Node getSelectedNode() {
         return (Node) tree.getSelectedItem().getUserObject();
-    }
-
-    @Override
-    public void setSelectedNodeCommand(SelectedNodeCommand selectedNodeCommand) {
-        this.selectedNodeCommand = selectedNodeCommand;
     }
 
 }
