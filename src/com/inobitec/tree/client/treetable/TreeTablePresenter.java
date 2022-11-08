@@ -6,6 +6,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.inobitec.tree.client.TreeProject;
+import com.inobitec.tree.client.event.EventBus;
+import com.inobitec.tree.client.event.UpdateTreeEvent;
+import com.inobitec.tree.client.event.handler.UpdateTreeHandler;
 import com.inobitec.tree.shared.model.Node;
 
 public class TreeTablePresenter {
@@ -14,6 +17,8 @@ public class TreeTablePresenter {
 
     public TreeTablePresenter(TreeTableDisplay view) {
         this.view = view;
+        bindUpdateTreeHandler();
+        getAllNodes();
     }
 
     private void getAllNodes() {
@@ -31,12 +36,14 @@ public class TreeTablePresenter {
         });
     }
 
-    public void updateTree() {
-        getAllNodes();
-    }
+    private void bindUpdateTreeHandler() {
+        EventBus.getInstance().addHandler(UpdateTreeEvent.TYPE, new UpdateTreeHandler() {
 
-    public Node getSelectedNode() {
-        return view.getSelectedNode();
+            @Override
+            public void onUpdateTree(UpdateTreeEvent updateEvent) {
+                getAllNodes();
+            }
+        });
     }
 
     public void go(HasWidgets container) {

@@ -1,2 +1,3 @@
 # Module treeproject
 # RPC service class, partial path of RPC policy file
+com.inobitec.tree.client.TreeService, 7EA434CD11196120BA90E3C91A94174C.gwt.rpc

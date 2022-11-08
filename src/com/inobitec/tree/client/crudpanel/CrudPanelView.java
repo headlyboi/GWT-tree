@@ -2,19 +2,19 @@ package com.inobitec.tree.client.crudpanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.inobitec.tree.client.event.ChildEvent;
+import com.inobitec.tree.client.event.DeleteEvent;
 import com.inobitec.tree.client.event.EditEvent;
 import com.inobitec.tree.client.event.EventBus;
 import com.inobitec.tree.client.event.RootEvent;
-import com.inobitec.tree.client.event.handler.DeleteHandler;
+import com.inobitec.tree.client.event.command.Command;
 import com.inobitec.tree.client.widget.CrudDialogBox;
-import com.inobitec.tree.shared.Fields;
-import com.inobitec.tree.shared.command.Command;
+import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
 public class CrudPanelView extends Composite implements CrudPanelDisplay {
@@ -31,25 +31,20 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private Label selectedNodeLabel;
     private CrudDialogBox crudDialogBox;
     private HorizontalPanel horizontalPanel;
-    private String selectedId = Fields.EMPTY_SYMBOL;
+    private String selectedId = Constants.EMPTY_SYMBOL;
     private Node selectedNode;
 
-    private DeleteHandler deleteHandler;
+    private SimpleEventBus eventBus = EventBus.getInstance();
 
     public CrudPanelView(String style) {
         build(style);
-        bindRootButtonClickHandler();
-        bindChildButtonClickHandler();
-        bindEditButtonClickHandler();
-        bindDeleteButtonClickHandler();
+        bindAllButtonsClickHandler();
         initWidget(horizontalPanel);
     }
 
     private int getSelectedId() {
         return Integer.valueOf(selectedId);
     }
-
-
 
     private void build(String style) {
         selectedNodeLabel = new Label(SELECTED_NODE_ID);
@@ -67,92 +62,81 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         horizontalPanel.setStyleName(style);
     }
 
-    private void bindRootButtonClickHandler() {
+    private void bindAllButtonsClickHandler() {
         rootNodeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 doRootClicked();
             }
         });
-    }
-
-    private void doRootClicked() {
-        crudDialogBox.showWindow(Fields.ROOT);
-        crudDialogBox.setCommand(new Command() {
-
-            @Override
-            public void executeCommand() {
-                EventBus.getInstance().fireEvent(new RootEvent(crudDialogBox.getNodeData()));
-            }
-        });
-    }
-
-    private void bindChildButtonClickHandler() {
         childNodeButton.addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 doChildClicked();
             }
         });
-    }
-
-    private void doChildClicked() {
-        crudDialogBox.showWindow(Fields.CHILD);
-        crudDialogBox.setParentIdData(getSelectedId());
-        crudDialogBox.setCommand(new Command() {
-
-            @Override
-            public void executeCommand() {
-                EventBus.getInstance().fireEvent(new ChildEvent(crudDialogBox.getNodeData(), getSelectedId()));
-            }
-
-        });
-    }
-
-    private void bindEditButtonClickHandler() {
         editNodeButton.addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 doEditClicked();
             }
         });
+        deleteNodeButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                doDeleteClicked();
+            }
+        });
+    }
+    
+    private void doRootClicked() {
+        crudDialogBox.showWindow(Constants.ROOT);
+        crudDialogBox.setCommand(new Command() {
+
+            @Override
+            public void executeCommand() {
+                eventBus.fireEvent(new RootEvent(crudDialogBox.getNodeData()));
+            }
+        });
+    }
+
+    private void doChildClicked() {
+        crudDialogBox.showWindow(Constants.CHILD);
+        crudDialogBox.setParentIdData(getSelectedId());
+        crudDialogBox.setCommand(new Command() {
+
+            @Override
+            public void executeCommand() {
+                eventBus.fireEvent(new ChildEvent(crudDialogBox.getNodeData(), getSelectedId()));
+            }
+
+        });
     }
 
     private void doEditClicked() {
-        crudDialogBox.showWindow(Fields.EDIT);
+        crudDialogBox.showWindow(Constants.EDIT);
         crudDialogBox.setTextBoxData(getSelectedNode());
         crudDialogBox.setCommand(new Command() {
 
             @Override
             public void executeCommand() {
-                EventBus.getInstance().fireEvent(new EditEvent(crudDialogBox.getNodeData(), getSelectedId()));
+                eventBus.fireEvent(new EditEvent(crudDialogBox.getNodeData(), getSelectedId()));
             }
 
         });
     }
 
-    private void bindDeleteButtonClickHandler() {
-        deleteNodeButton.addClickHandler(new ClickHandler() {
+    private void doDeleteClicked() {
+        crudDialogBox.showWindow(Constants.DELETE);
+        crudDialogBox.setCommand(new Command() {
 
             @Override
-            public void onClick(ClickEvent event) {
-                crudDialogBox.showWindow(Fields.DELETE);
-                crudDialogBox.setCommand(new Command() {
-
-                    @Override
-                    public void executeCommand() {
-                        deleteHandler.executeDeleteHandler(getSelectedId());
-                    }
-                });
+            public void executeCommand() {
+                eventBus.fireEvent(new DeleteEvent(getSelectedId()));
             }
-        });
-    }
 
-    @Override
-    public void setDeleteHandler(DeleteHandler deleteHandler) {
-        this.deleteHandler = deleteHandler;
+        });
     }
 
     @Override
@@ -165,8 +149,8 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     @Override
     public void setSelectedId(Integer id) {
 
-        if (id == Fields.EMPTY_ID) {
-            selectedNodeLabel.setText(SELECTED_NODE_ID + Fields.EMPTY_SYMBOL);
+        if (id == Constants.EMPTY_ID) {
+            selectedNodeLabel.setText(SELECTED_NODE_ID + Constants.EMPTY_SYMBOL);
             return;
         }
         selectedId = String.valueOf(id);

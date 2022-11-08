@@ -1,11 +1,12 @@
 package com.inobitec.tree.client.event;
 
 import com.google.web.bindery.event.shared.Event;
+import com.inobitec.tree.client.event.handler.EditHandler;
 import com.inobitec.tree.shared.model.Node;
 
 public class EditEvent extends Event<EditHandler> {
 
-    public static final Type<EditHandler> TYPE = new Type<EditHandler>();
+    public static final Type<EditHandler> TYPE = new Type<>();
 
     private Node node;
 

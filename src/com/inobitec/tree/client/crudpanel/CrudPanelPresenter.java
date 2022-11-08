@@ -6,16 +6,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.inobitec.tree.client.TreeProject;
 import com.inobitec.tree.client.event.ChildEvent;
+import com.inobitec.tree.client.event.DeleteEvent;
 import com.inobitec.tree.client.event.EditEvent;
-import com.inobitec.tree.client.event.EditHandler;
 import com.inobitec.tree.client.event.EventBus;
 import com.inobitec.tree.client.event.RootEvent;
-import com.inobitec.tree.client.event.RootHandler;
-import com.inobitec.tree.client.event.UpdateEvent;
+import com.inobitec.tree.client.event.UpdateAllNodesEvent;
+import com.inobitec.tree.client.event.UpdateTreeEvent;
+import com.inobitec.tree.client.event.handler.ChildHandler;
 import com.inobitec.tree.client.event.handler.DeleteHandler;
+import com.inobitec.tree.client.event.handler.EditHandler;
+import com.inobitec.tree.client.event.handler.RootHandler;
+import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
-//FIXME Edit give a fuck
 public class CrudPanelPresenter {
 
     private CrudPanelDisplay view;
@@ -24,26 +27,43 @@ public class CrudPanelPresenter {
 
     public CrudPanelPresenter(CrudPanelDisplay view) {
         this.view = view;
-        build();
+        bindHandlers();
+        view.setActiveButtons(false);
     }
 
-    private void build() {
-        bindRootHandler();
-        bindChildHandler();
-        bindEditClickHandler();
-        bindDeleteClickHandler();
-    }
-
-    private void bindRootHandler() {
+    private void bindHandlers() {
 
         eventBus.addHandler(RootEvent.TYPE, new RootHandler() {
-            
+
             @Override
             public void executeRootHandler(RootEvent handler, Node node) {
                 addRootNode(node);
             }
         });
-        
+
+        eventBus.addHandler(ChildEvent.TYPE, new ChildHandler() {
+
+            @Override
+            public void executeChildHandler(ChildEvent childEvent, Node node, Integer selectedId) {
+                addChildNode(node, selectedId);
+            }
+        });
+
+        eventBus.addHandler(EditEvent.TYPE, new EditHandler() {
+
+            @Override
+            public void executeEditHandler(EditEvent editEvent, Node node, Integer selectedId) {
+                editNodeById(node, selectedId);
+            }
+        });
+
+        eventBus.addHandler(DeleteEvent.TYPE, new DeleteHandler() {
+
+            @Override
+            public void executeDeleteHandler(DeleteEvent deleteEvent, Integer id) {
+                deleteNodeById(id);
+            }
+        });
     }
 
     private void addRootNode(Node node) {
@@ -51,7 +71,9 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                eventBus.fireEvent(new UpdateEvent());
+                setSelectedId(Constants.EMPTY_ID);
+                eventBus.fireEvent(new UpdateTreeEvent());
+                eventBus.fireEvent(new UpdateAllNodesEvent());
             }
 
             @Override
@@ -61,23 +83,14 @@ public class CrudPanelPresenter {
         });
     }
 
-    private void bindChildHandler() {
-        
-        eventBus.addHandler(ChildEvent.TYPE, new com.inobitec.tree.client.event.ChildHandler() {
-            
-            @Override
-            public void executeChildHandler(ChildEvent childEvent, Node node, int selectedId) {
-               addChildNode(node, selectedId);
-            }
-        });
-    }
-
-    private void addChildNode(Node node, int selectedId) {
+    private void addChildNode(Node node, Integer selectedId) {
         TreeProject.treeService.addChildNode(node, selectedId, new AsyncCallback<Node>() {
 
             @Override
             public void onSuccess(Node node) {
-                eventBus.fireEvent(new UpdateEvent());
+                setSelectedId(Constants.EMPTY_ID);
+                eventBus.fireEvent(new UpdateTreeEvent());
+                eventBus.fireEvent(new UpdateAllNodesEvent());
             }
 
             @Override
@@ -87,22 +100,15 @@ public class CrudPanelPresenter {
         });
     }
 
-    private void bindEditClickHandler() {
-        eventBus.addHandler(EditEvent.TYPE, new EditHandler() {
-            
-            @Override
-            public void executeEditHandler(EditEvent editEvent, Node node, int selectedId) {
-                editNodeById(node, selectedId);
-            }
-        });
-    }
 
-    private void editNodeById(Node node, int selectedId) {
+    private void editNodeById(Node node, Integer selectedId) {
         TreeProject.treeService.editNodeById(node, selectedId, new AsyncCallback<Node>() {
 
             @Override
             public void onSuccess(Node node) {
-                eventBus.fireEvent(new UpdateEvent());
+                setSelectedId(Constants.EMPTY_ID);
+                eventBus.fireEvent(new UpdateTreeEvent());
+                eventBus.fireEvent(new UpdateAllNodesEvent());
             }
 
             @Override
@@ -112,22 +118,14 @@ public class CrudPanelPresenter {
         });
     }
 
-    private void bindDeleteClickHandler() {
-        view.setDeleteHandler(new DeleteHandler() {
-
-            @Override
-            public void executeDeleteHandler(int id) {
-                deleteNode(id);
-            }
-        });
-    }
-
-    private void deleteNode(int selectedId) {
+    private void deleteNodeById(Integer selectedId) {
         TreeProject.treeService.deleteNodeById(selectedId, new AsyncCallback<Void>() {
 
             @Override
             public void onSuccess(Void result) {
-                eventBus.fireEvent(new UpdateEvent());
+                setSelectedId(Constants.EMPTY_ID);
+                eventBus.fireEvent(new UpdateTreeEvent());
+                eventBus.fireEvent(new UpdateAllNodesEvent());
             }
 
             @Override
@@ -135,14 +133,6 @@ public class CrudPanelPresenter {
                 Window.alert(caught.getMessage());
             }
         });
-    }
-
-    public void setActiveButtons(boolean bool) {
-        view.setActiveButtons(bool);
-    }
-
-    public void setSelectedNode(Node selectedNode) {
-        view.setSelectedNode(selectedNode);
     }
 
     public void setSelectedId(Integer id) {

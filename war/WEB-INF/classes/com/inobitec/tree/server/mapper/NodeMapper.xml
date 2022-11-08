@@ -42,6 +42,7 @@
     <select id="getAllNodes" resultMap="nodeMap">
         SELECT node.ID, node.PARENT_ID, node.NAME, node.IP, node.PORT
         FROM node
+        ORDER BY id
     </select>
 
     <update id="editNodeById">

@@ -6,7 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.inobitec.tree.shared.model.Node;
 
 public interface TreeServiceAsync {
-    void addRootNode(Node node, AsyncCallback<Node> callback) throws IllegalArgumentException;
+    void addRootNode(Node node, AsyncCallback<Node> callback);
 
     void addChildNode(Node node, Integer parentId, AsyncCallback<Node> callback);
 

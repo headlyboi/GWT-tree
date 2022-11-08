@@ -4,6 +4,11 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class Node implements IsSerializable {
 
+    @Override
+    public String toString() {
+        return "Node [id=" + id + ", parentId=" + parentId + ", name=" + name + ", ip=" + ip + ", port=" + port + "]";
+    }
+
     private Integer id;
 
     private Integer parentId;

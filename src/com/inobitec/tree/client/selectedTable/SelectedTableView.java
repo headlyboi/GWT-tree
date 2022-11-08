@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.shared.Fields;
+import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
 public class SelectedTableView extends Composite implements SelectedTableDisplay {
@@ -29,11 +29,11 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
         selectedVerticalPanel.add(selectedLabel);
 
         flexTable.setBorderWidth(1);
-        flexTable.setText(Fields.ID_NODE_ROW, Fields.ID_NODE_COL, Fields.ID);
-        flexTable.setText(Fields.PARENT_ID_NODE_ROW, Fields.ID_NODE_COL, Fields.PARENT_ID);
-        flexTable.setText(Fields.NAME_NODE_ROW, Fields.ID_NODE_COL, Fields.NAME);
-        flexTable.setText(Fields.IP_NODE_ROW, Fields.ID_NODE_COL, Fields.IP);
-        flexTable.setText(Fields.PORT_NODE_ROW, Fields.ID_NODE_COL, Fields.PORT);
+        flexTable.setText(Constants.ID_NODE_ROW, Constants.ID_NODE_COL, Constants.ID);
+        flexTable.setText(Constants.PARENT_ID_NODE_ROW, Constants.ID_NODE_COL, Constants.PARENT_ID);
+        flexTable.setText(Constants.NAME_NODE_ROW, Constants.ID_NODE_COL, Constants.NAME);
+        flexTable.setText(Constants.IP_NODE_ROW, Constants.ID_NODE_COL, Constants.IP);
+        flexTable.setText(Constants.PORT_NODE_ROW, Constants.ID_NODE_COL, Constants.PORT);
 
         wrapperVerticalPanel.add(flexTable);
         selectedVerticalPanel.add(wrapperVerticalPanel);
@@ -43,27 +43,27 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
 
     @Override
     public void setNodeData(Node node) {
-        flexTable.setText(Fields.ID_NODE_ROW, Fields.PARENT_ID_NODE_COL, String.valueOf(node.getId()));
+        flexTable.setText(Constants.ID_NODE_ROW, Constants.PARENT_ID_NODE_COL, String.valueOf(node.getId()));
         Integer parentId = node.getParentId();
-        if (parentId == Fields.EMPTY_ID) {
-            flexTable.setText(Fields.PARENT_ID_NODE_ROW, Fields.PARENT_ID_NODE_COL, Fields.EMPTY_SYMBOL);
+        if (parentId == Constants.EMPTY_ID) {
+            flexTable.setText(Constants.PARENT_ID_NODE_ROW, Constants.PARENT_ID_NODE_COL, Constants.EMPTY_SYMBOL);
         } else {
-            flexTable.setText(Fields.PARENT_ID_NODE_ROW, Fields.PARENT_ID_NODE_COL, String.valueOf(parentId));
+            flexTable.setText(Constants.PARENT_ID_NODE_ROW, Constants.PARENT_ID_NODE_COL, String.valueOf(parentId));
         }
 
-        flexTable.setText(Fields.NAME_NODE_ROW, Fields.PARENT_ID_NODE_COL, node.getName());
-        flexTable.setText(Fields.IP_NODE_ROW, Fields.PARENT_ID_NODE_COL, node.getIp());
-        flexTable.setText(Fields.PORT_NODE_ROW, Fields.PARENT_ID_NODE_COL, node.getPort());
+        flexTable.setText(Constants.NAME_NODE_ROW, Constants.PARENT_ID_NODE_COL, node.getName());
+        flexTable.setText(Constants.IP_NODE_ROW, Constants.PARENT_ID_NODE_COL, node.getIp());
+        flexTable.setText(Constants.PORT_NODE_ROW, Constants.PARENT_ID_NODE_COL, node.getPort());
     }
 
     @Override
     public void cleanData() {
 
-        flexTable.removeCell(Fields.ID_NODE_ROW, Fields.PARENT_ID_NODE_COL);
-        flexTable.removeCell(Fields.PARENT_ID_NODE_ROW, Fields.PARENT_ID_NODE_COL);
-        flexTable.removeCell(Fields.NAME_NODE_ROW, Fields.PARENT_ID_NODE_COL);
-        flexTable.removeCell(Fields.IP_NODE_ROW, Fields.PARENT_ID_NODE_COL);
-        flexTable.removeCell(Fields.PORT_NODE_ROW, Fields.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Constants.ID_NODE_ROW, Constants.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Constants.PARENT_ID_NODE_ROW, Constants.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Constants.NAME_NODE_ROW, Constants.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Constants.IP_NODE_ROW, Constants.PARENT_ID_NODE_COL);
+        flexTable.removeCell(Constants.PORT_NODE_ROW, Constants.PARENT_ID_NODE_COL);
 
     }
 }

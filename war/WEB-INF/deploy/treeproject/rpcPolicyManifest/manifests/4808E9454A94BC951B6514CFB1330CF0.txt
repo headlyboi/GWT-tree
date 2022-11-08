@@ -1,0 +1,2 @@
+serviceClass: com.inobitec.tree.client.TreeService
+path: 7EA434CD11196120BA90E3C91A94174C.gwt.rpc

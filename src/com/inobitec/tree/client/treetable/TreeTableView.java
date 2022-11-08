@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.inobitec.tree.client.event.EventBus;
 import com.inobitec.tree.client.event.SelectedNodeEvent;
-import com.inobitec.tree.shared.Fields;
+import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
 public class TreeTableView extends Composite implements TreeTableDisplay {
@@ -57,7 +57,7 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
                         itemFromTable.setText(nodeFromTable.getName() + UNTOUCH);
                     }
                 }
-                EventBus.getInstance().fireEvent(new SelectedNodeEvent());
+                EventBus.getInstance().fireEvent(new SelectedNodeEvent(getSelectedNode()));
             }
         });
     }
@@ -93,9 +93,9 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
 
     private void updateTreeNodes(List<Node> nodeList) {
         for (Node node : nodeList) {
-            if (node.getParentId() == Fields.EMPTY_ID) {
+            if (node.getParentId() == Constants.EMPTY_ID) {
                 addRootItem(node);
-            } else if (node.getParentId() != Fields.EMPTY_ID) {
+            } else if (node.getParentId() != Constants.EMPTY_ID) {
                 addChildItem(node);
             }
         }

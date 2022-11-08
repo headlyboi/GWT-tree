@@ -9,8 +9,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.shared.Fields;
-import com.inobitec.tree.shared.command.Command;
+import com.inobitec.tree.client.event.command.Command;
+import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
 public class CrudDialogBox extends Composite {
@@ -40,11 +40,11 @@ public class CrudDialogBox extends Composite {
     private HorizontalPanel ipHorizontalPanel;
     private HorizontalPanel portHorizontalPanel;
     private HorizontalPanel buttonHorizontalPanel;
-    private final Label idLabel = new Label(Fields.ID);
-    private final Label parentIdLabel = new Label(Fields.PARENT_ID);
-    private final Label nameLabel = new Label(Fields.NAME);
-    private final Label ipLabel = new Label(Fields.IP);
-    private final Label portLabel = new Label(Fields.PORT);
+    private final Label idLabel = new Label(Constants.ID);
+    private final Label parentIdLabel = new Label(Constants.PARENT_ID);
+    private final Label nameLabel = new Label(Constants.NAME);
+    private final Label ipLabel = new Label(Constants.IP);
+    private final Label portLabel = new Label(Constants.PORT);
 
     private Command command;
 
@@ -133,33 +133,35 @@ public class CrudDialogBox extends Composite {
     }
 
     private void clearTextBoxData() {
-        idTextBox.setValue(Fields.EMPTY_SYMBOL);
-        parentIdTextBox.setValue(Fields.EMPTY_SYMBOL);
-        nameTextBox.setValue(Fields.EMPTY_SYMBOL);
-        ipTextBox.setValue(Fields.EMPTY_SYMBOL);
-        portTextBox.setValue(Fields.EMPTY_SYMBOL);
+        idTextBox.setValue(Constants.EMPTY_SYMBOL);
+        parentIdTextBox.setValue(Constants.EMPTY_SYMBOL);
+        nameTextBox.setValue(Constants.EMPTY_SYMBOL);
+        ipTextBox.setValue(Constants.EMPTY_SYMBOL);
+        portTextBox.setValue(Constants.EMPTY_SYMBOL);
     }
 
+    //TODO set about node
     public void showWindow(String buttonName) {
         clearTextBoxData();
         switch (buttonName) {
-            case Fields.ROOT: {
+            case Constants.ROOT: {
                 setVisibleFields(true);
                 dialogBox.setText(BUTTON_ROOT_NODE);
                 break;
             }
-            case Fields.CHILD: {
+            case Constants.CHILD: {
                 setVisibleFields(true);
                 dialogBox.setText(BUTTON_CHILD_NODE);
+                
                 break;
             }
-            case Fields.EDIT: {
+            case Constants.EDIT: {
                 setVisibleFields(true);
                 dialogBox.setText(BUTTON_EDIT);
                 break;
             }
 
-            case Fields.DELETE: {
+            case Constants.DELETE: {
                 setVisibleFields(false);
                 dialogBox.setText(BUTTON_DELETE);
                 break;
@@ -175,16 +177,16 @@ public class CrudDialogBox extends Composite {
      */
     public Node getNodeData() {
         Node node = new Node();
-        if (getIdData() != Fields.EMPTY_SYMBOL) {
+        if (getIdData() != Constants.EMPTY_SYMBOL) {
             node.setId(Integer.valueOf(getIdData()));
         }
-        if (getParentIdData() != Fields.EMPTY_SYMBOL) {
+        if (getParentIdData() != Constants.EMPTY_SYMBOL) {
             node.setParentId(Integer.valueOf(getParentIdData()));
         }
-
         node.setName(getNameData());
         node.setIp(getIpData());
         node.setPort(getPortData());
+        System.out.print(node.toString());
         return node;
     }
 
@@ -218,9 +220,9 @@ public class CrudDialogBox extends Composite {
         this.ipTextBox.setValue(node.getIp());
         this.portTextBox.setValue(node.getPort());
 
-        int parentIdFromNode = node.getParentId();
-        if (parentIdFromNode == Fields.EMPTY_ID) {
-            this.parentIdTextBox.setText(Fields.EMPTY_SYMBOL);
+        Integer parentIdFromNode = node.getParentId();
+        if (parentIdFromNode == Constants.EMPTY_ID) {
+            this.parentIdTextBox.setText(Constants.EMPTY_SYMBOL);
             return;
         }
         setParentIdData(parentIdFromNode);

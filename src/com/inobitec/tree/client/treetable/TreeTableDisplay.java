@@ -10,5 +10,4 @@ public interface TreeTableDisplay extends IsWidget {
     void setNodes(List<Node> nodeList);
 
     Node getSelectedNode();
-
 }

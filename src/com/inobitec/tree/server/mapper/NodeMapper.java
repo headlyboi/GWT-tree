@@ -9,11 +9,11 @@ import com.inobitec.tree.shared.model.Node;
 @Mapper
 public interface NodeMapper {
 
-    int addRootNode(Node node);
+    Integer addRootNode(Node node);
 
     Node getNodeById(Integer id);
 
-    int addChildNode(@Param("node") Node node, @Param("parentId") Integer parentId);
+    Integer addChildNode(@Param("node") Node node, @Param("parentId") Integer parentId);
 
     void editNodeById(@Param("node") Node node, @Param("id") Integer id);
 

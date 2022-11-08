@@ -1,11 +1,12 @@
 package com.inobitec.tree.client.event;
 
 import com.google.web.bindery.event.shared.Event;
+import com.inobitec.tree.client.event.handler.RootHandler;
 import com.inobitec.tree.shared.model.Node;
 
 public class RootEvent extends Event<RootHandler> {
 
-    public static final Type<RootHandler> TYPE = new Type<RootHandler>();
+    public static final Type<RootHandler> TYPE = new Type<>();
 
     private Node node;
 

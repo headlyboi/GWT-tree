@@ -11,8 +11,9 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.inobitec.tree.client.event.EventBus;
-import com.inobitec.tree.client.event.UpdateEvent;
-import com.inobitec.tree.shared.Fields;
+import com.inobitec.tree.client.event.UpdateAllNodesEvent;
+import com.inobitec.tree.client.event.UpdateTreeEvent;
+import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
 public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay {
@@ -60,11 +61,11 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
         wrapperVerticalPanel.setStyleName(wrapperStyle);
         fieldsHorizontalPanel = new HorizontalPanel();
         flexTable = new FlexTable();
-        idLabel = new Label(Fields.ID);
-        parentIdLabel = new Label(Fields.PARENT_ID);
-        nameLabel = new Label(Fields.NAME);
-        ipLabel = new Label(Fields.IP);
-        portLabel = new Label(Fields.PORT);
+        idLabel = new Label(Constants.ID);
+        parentIdLabel = new Label(Constants.PARENT_ID);
+        nameLabel = new Label(Constants.NAME);
+        ipLabel = new Label(Constants.IP);
+        portLabel = new Label(Constants.PORT);
 
         idLabel.setStyleName(STYLE_ALL_NODES_ID + STYLE_LABEL);
         parentIdLabel.setStyleName(STYLE_ALL_NODES_PARENT_ID + STYLE_LABEL);
@@ -93,7 +94,8 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
 
             @Override
             public void onClick(ClickEvent event) {
-                EventBus.getInstance().fireEvent(new UpdateEvent());
+                EventBus.getInstance().fireEvent(new UpdateTreeEvent());
+                EventBus.getInstance().fireEvent(new UpdateAllNodesEvent());
             }
         });
     }
@@ -107,21 +109,21 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
                 continue;
             }
 
-            String parentId = (node.getParentId() == Fields.EMPTY_ID) ? parentId = Fields.EMPTY_SYMBOL
+            String parentId = (node.getParentId() == Constants.EMPTY_ID) ? parentId = Constants.EMPTY_SYMBOL
                     : String.valueOf(node.getParentId());
 
-            flexTable.setText(i, Fields.ID_NODE_COL, String.valueOf(node.getId()));
-            flexTable.setText(i, Fields.PARENT_ID_NODE_COL, parentId);
-            flexTable.setText(i, Fields.NAME_NODE_COL, node.getName());
-            flexTable.setText(i, Fields.IP_NODE_COL, node.getIp());
-            flexTable.setText(i, Fields.PORT_NODE_COL, node.getPort());
+            flexTable.setText(i, Constants.ID_NODE_COL, String.valueOf(node.getId()));
+            flexTable.setText(i, Constants.PARENT_ID_NODE_COL, parentId);
+            flexTable.setText(i, Constants.NAME_NODE_COL, node.getName());
+            flexTable.setText(i, Constants.IP_NODE_COL, node.getIp());
+            flexTable.setText(i, Constants.PORT_NODE_COL, node.getPort());
         }
-        flexTable.getColumnFormatter().setStyleName(Fields.ID_NODE_COL, STYLE_ALL_NODES_ID + STYLE_COLUMN);
-        flexTable.getColumnFormatter().setStyleName(Fields.PARENT_ID_NODE_COL,
+        flexTable.getColumnFormatter().setStyleName(Constants.ID_NODE_COL, STYLE_ALL_NODES_ID + STYLE_COLUMN);
+        flexTable.getColumnFormatter().setStyleName(Constants.PARENT_ID_NODE_COL,
                 STYLE_ALL_NODES_PARENT_ID + STYLE_COLUMN);
-        flexTable.getColumnFormatter().setStyleName(Fields.NAME_NODE_COL, STYLE_ALL_NODES_NAME + STYLE_COLUMN);
-        flexTable.getColumnFormatter().setStyleName(Fields.IP_NODE_COL, STYLE_ALL_NODES_IP + STYLE_COLUMN);
-        flexTable.getColumnFormatter().setStyleName(Fields.PORT_NODE_COL, STYLE_ALL_NODES_PORT + STYLE_COLUMN);
+        flexTable.getColumnFormatter().setStyleName(Constants.NAME_NODE_COL, STYLE_ALL_NODES_NAME + STYLE_COLUMN);
+        flexTable.getColumnFormatter().setStyleName(Constants.IP_NODE_COL, STYLE_ALL_NODES_IP + STYLE_COLUMN);
+        flexTable.getColumnFormatter().setStyleName(Constants.PORT_NODE_COL, STYLE_ALL_NODES_PORT + STYLE_COLUMN);
     }
 
 }

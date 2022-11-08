@@ -1,7 +1,9 @@
 package com.inobitec.tree.client.event.handler;
 
-public interface DeleteHandler {
+import com.google.gwt.event.shared.EventHandler;
+import com.inobitec.tree.client.event.DeleteEvent;
 
-    void executeDeleteHandler(int id);
+public interface DeleteHandler extends EventHandler{
 
+    void executeDeleteHandler(DeleteEvent deleteEvent, Integer id);
 }
