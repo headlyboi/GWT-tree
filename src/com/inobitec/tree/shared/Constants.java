@@ -15,12 +15,15 @@ public class Constants {
     public static final String EDIT = "edit";
     public static final String DELETE = "delete";
     
+    
+    public static final int FIRST_COL = 0;
     public static final int ID_NODE_COL = 0;
     public static final int PARENT_ID_NODE_COL = 1;
     public static final int NAME_NODE_COL = 2;
     public static final int IP_NODE_COL = 3;
     public static final int PORT_NODE_COL = 4;
     
+    public static final int TWO_ROW = 2;
     public static final int ID_NODE_ROW = 0;
     public static final int PARENT_ID_NODE_ROW = 1;
     public static final int NAME_NODE_ROW = 2;

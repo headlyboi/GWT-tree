@@ -14,7 +14,9 @@ import com.inobitec.tree.client.event.SelectedNodeEvent;
 import com.inobitec.tree.client.event.UpdateAllNodesEvent;
 import com.inobitec.tree.client.event.UpdateButtonsEvent;
 import com.inobitec.tree.client.event.UpdateTreeEvent;
+import com.inobitec.tree.client.event.command.Command;
 import com.inobitec.tree.client.event.handler.ChildHandler;
+import com.inobitec.tree.client.event.handler.CrudHandler;
 import com.inobitec.tree.client.event.handler.DeleteHandler;
 import com.inobitec.tree.client.event.handler.EditHandler;
 import com.inobitec.tree.client.event.handler.RootHandler;
@@ -32,39 +34,81 @@ public class CrudPanelPresenter {
     public CrudPanelPresenter(CrudPanelDisplay view) {
         this.view = view;
         bindHandlers();
-        view.setActiveButtons(false);
+        bindCrudHandler();
+        view.setActiveButtons(Constants.UNACTIVE);
+    }
+
+    private void bindCrudHandler() {
+        view.setCrudHandler(new CrudHandler() {
+
+            @Override
+            public Command executeHandler(String buttonName) {
+                switch (buttonName) {
+                    case Constants.ROOT: {
+                        return new Command() {
+
+                            @Override
+                            public void executeCommand() {
+                                eventBus.fireEvent(new RootEvent(view.getNodeData()));
+                            }
+                        };
+                    }
+                    case Constants.CHILD: {
+                        return new Command() {
+                            @Override
+                            public void executeCommand() {
+                                eventBus.fireEvent(new ChildEvent(view.getNodeData(), view.getSelectedId()));
+                            }
+                        };
+                    }
+                    case Constants.EDIT: {
+                        return new Command() {
+                            @Override
+                            public void executeCommand() {
+                                eventBus.fireEvent(new EditEvent(view.getNodeData(), view.getSelectedId()));
+                            }
+                        };
+                    }
+                    case Constants.DELETE: {
+                        return new Command() {
+
+                            @Override
+                            public void executeCommand() {
+                                eventBus.fireEvent(new DeleteEvent(view.getSelectedId()));
+                            }
+                        };
+                    }
+                }
+                return null;
+            }
+        });
     }
 
     private void bindHandlers() {
-
         eventBus.addHandler(RootEvent.TYPE, new RootHandler() {
             @Override
             public void executeRootHandler(RootEvent handler, Node node) {
                 addRootNode(node);
             }
         });
-
         eventBus.addHandler(ChildEvent.TYPE, new ChildHandler() {
             @Override
             public void executeChildHandler(ChildEvent childEvent, Node node, Integer selectedId) {
                 addChildNode(node, selectedId);
             }
         });
-
         eventBus.addHandler(EditEvent.TYPE, new EditHandler() {
             @Override
             public void executeEditHandler(EditEvent editEvent, Node node, Integer selectedId) {
                 editNodeById(node, selectedId);
             }
         });
-
         eventBus.addHandler(DeleteEvent.TYPE, new DeleteHandler() {
             @Override
             public void executeDeleteHandler(DeleteEvent deleteEvent, Integer id) {
                 deleteNodeById(id);
             }
         });
-
         eventBus.addHandler(UpdateButtonsEvent.TYPE, new UpdateButtonsHandler() {
             @Override
             public void onUpdateButtons(UpdateButtonsEvent buttonsEvent) {
@@ -85,9 +129,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                eventBus.fireEvent(new UpdateTreeEvent());
-                eventBus.fireEvent(new UpdateAllNodesEvent());
-                eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
+                updateAllTables();
             }
 
             @Override
@@ -102,9 +144,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                eventBus.fireEvent(new UpdateTreeEvent());
-                eventBus.fireEvent(new UpdateAllNodesEvent());
-                eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
+                updateAllTables();
             }
 
             @Override
@@ -119,9 +159,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                eventBus.fireEvent(new UpdateTreeEvent());
-                eventBus.fireEvent(new UpdateAllNodesEvent());
-                eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
+                updateAllTables();
             }
 
             @Override
@@ -136,9 +174,7 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Void result) {
-                eventBus.fireEvent(new UpdateTreeEvent());
-                eventBus.fireEvent(new UpdateAllNodesEvent());
-                eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
+                updateAllTables();
             }
 
             @Override
@@ -148,6 +184,11 @@ public class CrudPanelPresenter {
         });
     }
 
+    private void updateAllTables() {
+        eventBus.fireEvent(new UpdateTreeEvent());
+        eventBus.fireEvent(new UpdateAllNodesEvent());
+        eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
+    }
 
     public void go(HasWidgets container) {
         container.add(view.asWidget());

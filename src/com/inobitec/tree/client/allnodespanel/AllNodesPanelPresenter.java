@@ -10,6 +10,8 @@ import com.inobitec.tree.client.event.EventBus;
 import com.inobitec.tree.client.event.SelectedNodeEvent;
 import com.inobitec.tree.client.event.UpdateAllNodesEvent;
 import com.inobitec.tree.client.event.UpdateButtonsEvent;
+import com.inobitec.tree.client.event.UpdateTreeEvent;
+import com.inobitec.tree.client.event.command.Command;
 import com.inobitec.tree.client.event.handler.UpdateAllNodesHandler;
 import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
@@ -20,11 +22,22 @@ public class AllNodesPanelPresenter {
 
     public AllNodesPanelPresenter(AllNodesPanelDisplay view) {
         this.view = view;
+        getAllNodes();
         bindUpdateAllNodesHandler();
-        printAllNodes();
+        bindUpdateCommand();
     }
 
-    private void printAllNodes() {
+    private void bindUpdateCommand() {
+        view.setCommand(new Command() {
+            @Override
+            public void executeCommand() {
+                EventBus.getInstance().fireEvent(new UpdateTreeEvent());
+                EventBus.getInstance().fireEvent(new UpdateAllNodesEvent());
+            }
+        });
+    }
+
+    private void getAllNodes() {
         TreeProject.treeService.getAllNodes(new AsyncCallback<List<Node>>() {
 
             @Override
@@ -43,7 +56,7 @@ public class AllNodesPanelPresenter {
         EventBus.getInstance().addHandler(UpdateAllNodesEvent.TYPE, new UpdateAllNodesHandler() {
             @Override
             public void onUpdateAllNodes(UpdateAllNodesEvent event) {
-                printAllNodes();
+                getAllNodes();
                 EventBus.getInstance().fireEvent(new UpdateButtonsEvent(Constants.UNACTIVE));
                 EventBus.getInstance().fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
             }

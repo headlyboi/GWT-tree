@@ -10,9 +10,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.client.event.EventBus;
-import com.inobitec.tree.client.event.SelectedNodeEvent;
-import com.inobitec.tree.client.event.UpdateButtonsEvent;
+import com.inobitec.tree.client.event.command.Command;
 import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
@@ -25,6 +23,8 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
     private Label label;
     private VerticalPanel verticalPanel;
     private TreeItem item;
+
+    private Command command;
 
     public TreeTableView(String style) {
         build(style);
@@ -58,8 +58,7 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
                         itemFromTable.setText(nodeFromTable.getName() + UNTOUCH);
                     }
                 }
-                EventBus.getInstance().fireEvent(new UpdateButtonsEvent(Constants.ACTIVE));
-                EventBus.getInstance().fireEvent(new SelectedNodeEvent(getSelectedNode()));
+                command.executeCommand();
             }
         });
     }
@@ -104,14 +103,18 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
     }
 
     @Override
-    public void setNodes(List<Node> nodeList) {
-        clearAllRootAndChildNodes();
-        updateTreeNodes(nodeList);
-    }
-
-    @Override
     public Node getSelectedNode() {
         return (Node) tree.getSelectedItem().getUserObject();
     }
 
+    @Override
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    @Override
+    public void setNodes(List<Node> nodeList) {
+        clearAllRootAndChildNodes();
+        updateTreeNodes(nodeList);
+    }
 }

@@ -2,17 +2,11 @@ package com.inobitec.tree.client.crudpanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.inobitec.tree.client.event.ChildEvent;
-import com.inobitec.tree.client.event.DeleteEvent;
-import com.inobitec.tree.client.event.EditEvent;
-import com.inobitec.tree.client.event.EventBus;
-import com.inobitec.tree.client.event.RootEvent;
-import com.inobitec.tree.client.event.command.Command;
+import com.inobitec.tree.client.event.handler.CrudHandler;
 import com.inobitec.tree.client.widget.CrudDialogBox;
 import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
@@ -34,20 +28,12 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     private String selectedId = Constants.EMPTY_SYMBOL;
     private Node selectedNode;
 
-    private SimpleEventBus eventBus = EventBus.getInstance();
+    private CrudHandler crudHandler;
 
     public CrudPanelView(String style) {
         build(style);
         bindAllButtonsClickHandler();
         initWidget(horizontalPanel);
-    }
-
-    private int getSelectedId() {
-        return Integer.valueOf(selectedId);
-    }
-
-    private Node getSelectedNode() {
-        return selectedNode;
     }
 
     private void build(String style) {
@@ -70,77 +56,54 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         rootNodeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                doRootClicked();
+                doClicked(Constants.ROOT);
             }
         });
         childNodeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                doChildClicked();
+                doClicked(Constants.CHILD);
             }
         });
         editNodeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                doEditClicked();
+                doClicked(Constants.EDIT);
             }
         });
         deleteNodeButton.addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
-                doDeleteClicked();
+                doClicked(Constants.DELETE);
             }
         });
     }
 
-    private void doRootClicked() {
-        crudDialogBox.showWindow(Constants.ROOT);
-        crudDialogBox.setCommand(new Command() {
-
-            @Override
-            public void executeCommand() {
-                eventBus.fireEvent(new RootEvent(crudDialogBox.getNodeData()));
+    private void doClicked(String buttonName) {
+        switch (buttonName) {
+            case Constants.ROOT: {
+                crudDialogBox.showWindow(Constants.ROOT);
+                crudDialogBox.setCommand(crudHandler.executeHandler(Constants.ROOT));
+                break;
             }
-        });
-    }
-
-    private void doChildClicked() {
-        crudDialogBox.showWindow(Constants.CHILD);
-        crudDialogBox.setParentIdData(getSelectedId());
-        crudDialogBox.setCommand(new Command() {
-
-            @Override
-            public void executeCommand() {
-                eventBus.fireEvent(new ChildEvent(crudDialogBox.getNodeData(), getSelectedId()));
+            case Constants.CHILD: {
+                crudDialogBox.showWindow(Constants.CHILD);
+                crudDialogBox.setParentIdData(getSelectedId());
+                crudDialogBox.setCommand(crudHandler.executeHandler(Constants.CHILD));
+                break;
             }
-
-        });
-    }
-
-    private void doEditClicked() {
-        crudDialogBox.showWindow(Constants.EDIT);
-        crudDialogBox.setTextBoxData(getSelectedNode());
-        crudDialogBox.setCommand(new Command() {
-
-            @Override
-            public void executeCommand() {
-                eventBus.fireEvent(new EditEvent(crudDialogBox.getNodeData(), getSelectedId()));
+            case Constants.EDIT: {
+                crudDialogBox.showWindow(Constants.EDIT);
+                crudDialogBox.setTextBoxData(getSelectedNode());
+                crudDialogBox.setCommand(crudHandler.executeHandler(Constants.EDIT));
+                break;
             }
-
-        });
-    }
-
-    private void doDeleteClicked() {
-        crudDialogBox.showWindow(Constants.DELETE);
-        crudDialogBox.setCommand(new Command() {
-
-            @Override
-            public void executeCommand() {
-                eventBus.fireEvent(new DeleteEvent(getSelectedId()));
+            case Constants.DELETE: {
+                crudDialogBox.showWindow(Constants.DELETE);
+                crudDialogBox.setCommand(crudHandler.executeHandler(Constants.DELETE));
+                break;
             }
-
-        });
+        }
     }
 
     @Override
@@ -165,5 +128,25 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         }
         selectedId = String.valueOf(id);
         selectedNodeLabel.setText(SELECTED_NODE_ID + selectedId);
+    }
+
+    @Override
+    public Node getNodeData() {
+        return crudDialogBox.getNodeData();
+    }
+
+    @Override
+    public Integer getSelectedId() {
+        return Integer.valueOf(selectedId);
+    }
+
+    @Override
+    public Node getSelectedNode() {
+        return selectedNode;
+    }
+
+    @Override
+    public void setCrudHandler(CrudHandler crudHandler) {
+        this.crudHandler = crudHandler;
     }
 }

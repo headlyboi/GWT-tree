@@ -10,9 +10,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.inobitec.tree.client.event.EventBus;
-import com.inobitec.tree.client.event.UpdateAllNodesEvent;
-import com.inobitec.tree.client.event.UpdateTreeEvent;
+import com.inobitec.tree.client.event.command.Command;
 import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
@@ -45,6 +43,8 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
     private VerticalPanel wrapperVerticalPanel;
     private FlexTable flexTable;
 
+    private Command command;
+    
     public AllNodesPanelView(String headerStyle, String wrapperStyle) {
         build(headerStyle, wrapperStyle);
         buildFields();
@@ -94,8 +94,7 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
 
             @Override
             public void onClick(ClickEvent event) {
-                EventBus.getInstance().fireEvent(new UpdateTreeEvent());
-                EventBus.getInstance().fireEvent(new UpdateAllNodesEvent());
+                command.executeCommand();
             }
         });
     }
@@ -124,6 +123,11 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
         flexTable.getColumnFormatter().setStyleName(Constants.NAME_NODE_COL, STYLE_ALL_NODES_NAME + STYLE_COLUMN);
         flexTable.getColumnFormatter().setStyleName(Constants.IP_NODE_COL, STYLE_ALL_NODES_IP + STYLE_COLUMN);
         flexTable.getColumnFormatter().setStyleName(Constants.PORT_NODE_COL, STYLE_ALL_NODES_PORT + STYLE_COLUMN);
+    }
+
+    @Override
+    public void setCommand(Command command) {
+        this.command = command;
     }
 
 }

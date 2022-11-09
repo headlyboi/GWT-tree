@@ -1,6 +1,5 @@
 package com.inobitec.tree.client.selectedTable;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
@@ -17,6 +16,8 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
     private VerticalPanel selectedVerticalPanel;
     private VerticalPanel wrapperVerticalPanel;
 
+    
+    
     public SelectedTableView(String style, String wrapperStyle) {
         build(style, wrapperStyle);
         initWidget(selectedVerticalPanel);
@@ -30,11 +31,11 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
         selectedVerticalPanel.add(selectedLabel);
 
         flexTable.setBorderWidth(1);
-        flexTable.setText(Constants.ID_NODE_ROW, Constants.ID_NODE_COL, Constants.ID);
-        flexTable.setText(Constants.PARENT_ID_NODE_ROW, Constants.ID_NODE_COL, Constants.PARENT_ID);
-        flexTable.setText(Constants.NAME_NODE_ROW, Constants.ID_NODE_COL, Constants.NAME);
-        flexTable.setText(Constants.IP_NODE_ROW, Constants.ID_NODE_COL, Constants.IP);
-        flexTable.setText(Constants.PORT_NODE_ROW, Constants.ID_NODE_COL, Constants.PORT);
+        flexTable.setText(Constants.ID_NODE_ROW, Constants.FIRST_COL, Constants.ID);
+        flexTable.setText(Constants.PARENT_ID_NODE_ROW, Constants.FIRST_COL, Constants.PARENT_ID);
+        flexTable.setText(Constants.NAME_NODE_ROW, Constants.FIRST_COL, Constants.NAME);
+        flexTable.setText(Constants.IP_NODE_ROW, Constants.FIRST_COL, Constants.IP);
+        flexTable.setText(Constants.PORT_NODE_ROW, Constants.FIRST_COL, Constants.PORT);
 
         wrapperVerticalPanel.add(flexTable);
         selectedVerticalPanel.add(wrapperVerticalPanel);
@@ -64,7 +65,7 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
     }
 
     private void cleanData() {
-        if (flexTable.getCellCount(1) != 2) {
+        if (flexTable.getCellCount(Constants.FIRST_COL) != Constants.TWO_ROW) {
             return;
         }
         flexTable.removeCell(Constants.ID_NODE_ROW, Constants.PARENT_ID_NODE_COL);
