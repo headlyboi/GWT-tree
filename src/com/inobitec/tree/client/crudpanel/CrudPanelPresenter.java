@@ -10,12 +10,16 @@ import com.inobitec.tree.client.event.DeleteEvent;
 import com.inobitec.tree.client.event.EditEvent;
 import com.inobitec.tree.client.event.EventBus;
 import com.inobitec.tree.client.event.RootEvent;
+import com.inobitec.tree.client.event.SelectedNodeEvent;
 import com.inobitec.tree.client.event.UpdateAllNodesEvent;
+import com.inobitec.tree.client.event.UpdateButtonsEvent;
 import com.inobitec.tree.client.event.UpdateTreeEvent;
 import com.inobitec.tree.client.event.handler.ChildHandler;
 import com.inobitec.tree.client.event.handler.DeleteHandler;
 import com.inobitec.tree.client.event.handler.EditHandler;
 import com.inobitec.tree.client.event.handler.RootHandler;
+import com.inobitec.tree.client.event.handler.SelectedNodeHandler;
+import com.inobitec.tree.client.event.handler.UpdateButtonsHandler;
 import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
@@ -34,7 +38,6 @@ public class CrudPanelPresenter {
     private void bindHandlers() {
 
         eventBus.addHandler(RootEvent.TYPE, new RootHandler() {
-
             @Override
             public void executeRootHandler(RootEvent handler, Node node) {
                 addRootNode(node);
@@ -42,7 +45,6 @@ public class CrudPanelPresenter {
         });
 
         eventBus.addHandler(ChildEvent.TYPE, new ChildHandler() {
-
             @Override
             public void executeChildHandler(ChildEvent childEvent, Node node, Integer selectedId) {
                 addChildNode(node, selectedId);
@@ -50,7 +52,6 @@ public class CrudPanelPresenter {
         });
 
         eventBus.addHandler(EditEvent.TYPE, new EditHandler() {
-
             @Override
             public void executeEditHandler(EditEvent editEvent, Node node, Integer selectedId) {
                 editNodeById(node, selectedId);
@@ -58,10 +59,23 @@ public class CrudPanelPresenter {
         });
 
         eventBus.addHandler(DeleteEvent.TYPE, new DeleteHandler() {
-
             @Override
             public void executeDeleteHandler(DeleteEvent deleteEvent, Integer id) {
                 deleteNodeById(id);
+            }
+        });
+
+        eventBus.addHandler(UpdateButtonsEvent.TYPE, new UpdateButtonsHandler() {
+            @Override
+            public void onUpdateButtons(UpdateButtonsEvent buttonsEvent) {
+                view.setActiveButtons(buttonsEvent.isActive());
+            }
+        });
+        eventBus.addHandler(SelectedNodeEvent.TYPE, new SelectedNodeHandler() {
+
+            @Override
+            public void onSelectedNode(SelectedNodeEvent selectedNodeEvent) {
+                view.setSelectedNode(selectedNodeEvent.getSelectedNode());
             }
         });
     }
@@ -71,9 +85,9 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                setSelectedId(Constants.EMPTY_ID);
                 eventBus.fireEvent(new UpdateTreeEvent());
                 eventBus.fireEvent(new UpdateAllNodesEvent());
+                eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
             }
 
             @Override
@@ -88,9 +102,9 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Node node) {
-                setSelectedId(Constants.EMPTY_ID);
                 eventBus.fireEvent(new UpdateTreeEvent());
                 eventBus.fireEvent(new UpdateAllNodesEvent());
+                eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
             }
 
             @Override
@@ -100,15 +114,14 @@ public class CrudPanelPresenter {
         });
     }
 
-
     private void editNodeById(Node node, Integer selectedId) {
         TreeProject.treeService.editNodeById(node, selectedId, new AsyncCallback<Node>() {
 
             @Override
             public void onSuccess(Node node) {
-                setSelectedId(Constants.EMPTY_ID);
                 eventBus.fireEvent(new UpdateTreeEvent());
                 eventBus.fireEvent(new UpdateAllNodesEvent());
+                eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
             }
 
             @Override
@@ -123,9 +136,9 @@ public class CrudPanelPresenter {
 
             @Override
             public void onSuccess(Void result) {
-                setSelectedId(Constants.EMPTY_ID);
                 eventBus.fireEvent(new UpdateTreeEvent());
                 eventBus.fireEvent(new UpdateAllNodesEvent());
+                eventBus.fireEvent(new SelectedNodeEvent(Constants.EMPTY_NODE));
             }
 
             @Override
@@ -135,9 +148,6 @@ public class CrudPanelPresenter {
         });
     }
 
-    public void setSelectedId(Integer id) {
-        view.setSelectedId(id);
-    }
 
     public void go(HasWidgets container) {
         container.add(view.asWidget());

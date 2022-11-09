@@ -7,8 +7,5 @@ public interface CrudPanelDisplay extends IsWidget {
 
     void setSelectedNode(Node selectedNode);
 
-    void setSelectedId(Integer id);
-
     void setActiveButtons(boolean bool);
-
 }

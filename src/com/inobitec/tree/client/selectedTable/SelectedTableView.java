@@ -1,5 +1,6 @@
 package com.inobitec.tree.client.selectedTable;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
@@ -43,6 +44,11 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
 
     @Override
     public void setNodeData(Node node) {
+        if (node == null){
+            cleanData();
+            return;
+        }
+        
         flexTable.setText(Constants.ID_NODE_ROW, Constants.PARENT_ID_NODE_COL, String.valueOf(node.getId()));
         Integer parentId = node.getParentId();
         if (parentId == Constants.EMPTY_ID) {
@@ -54,16 +60,17 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
         flexTable.setText(Constants.NAME_NODE_ROW, Constants.PARENT_ID_NODE_COL, node.getName());
         flexTable.setText(Constants.IP_NODE_ROW, Constants.PARENT_ID_NODE_COL, node.getIp());
         flexTable.setText(Constants.PORT_NODE_ROW, Constants.PARENT_ID_NODE_COL, node.getPort());
+
     }
 
-    @Override
-    public void cleanData() {
-
+    private void cleanData() {
+        if (flexTable.getCellCount(1) != 2) {
+            return;
+        }
         flexTable.removeCell(Constants.ID_NODE_ROW, Constants.PARENT_ID_NODE_COL);
         flexTable.removeCell(Constants.PARENT_ID_NODE_ROW, Constants.PARENT_ID_NODE_COL);
         flexTable.removeCell(Constants.NAME_NODE_ROW, Constants.PARENT_ID_NODE_COL);
         flexTable.removeCell(Constants.IP_NODE_ROW, Constants.PARENT_ID_NODE_COL);
         flexTable.removeCell(Constants.PORT_NODE_ROW, Constants.PARENT_ID_NODE_COL);
-
     }
 }

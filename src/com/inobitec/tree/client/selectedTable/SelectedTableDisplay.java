@@ -6,6 +6,4 @@ import com.inobitec.tree.shared.model.Node;
 public interface SelectedTableDisplay extends IsWidget {
 
     void setNodeData(Node node);
-
-    void cleanData();
 }

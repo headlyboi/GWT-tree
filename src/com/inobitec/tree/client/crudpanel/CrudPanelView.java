@@ -46,6 +46,10 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
         return Integer.valueOf(selectedId);
     }
 
+    private Node getSelectedNode() {
+        return selectedNode;
+    }
+
     private void build(String style) {
         selectedNodeLabel = new Label(SELECTED_NODE_ID);
         horizontalPanel = new HorizontalPanel();
@@ -89,7 +93,7 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
             }
         });
     }
-    
+
     private void doRootClicked() {
         crudDialogBox.showWindow(Constants.ROOT);
         crudDialogBox.setCommand(new Command() {
@@ -147,22 +151,19 @@ public class CrudPanelView extends Composite implements CrudPanelDisplay {
     }
 
     @Override
-    public void setSelectedId(Integer id) {
-
+    public void setSelectedNode(Node node) {
+        selectedNode = node;
+        if (node == Constants.EMPTY_NODE) {
+            selectedId = Constants.EMPTY_SYMBOL;
+            selectedNodeLabel.setText(SELECTED_NODE_ID + selectedId);
+            return;
+        }
+        Integer id = node.getId();
         if (id == Constants.EMPTY_ID) {
             selectedNodeLabel.setText(SELECTED_NODE_ID + Constants.EMPTY_SYMBOL);
             return;
         }
         selectedId = String.valueOf(id);
         selectedNodeLabel.setText(SELECTED_NODE_ID + selectedId);
-    }
-
-    @Override
-    public void setSelectedNode(Node node) {
-        selectedNode = node;
-    }
-
-    private Node getSelectedNode() {
-        return selectedNode;
     }
 }

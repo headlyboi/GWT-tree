@@ -1,5 +1,7 @@
 package com.inobitec.tree.shared;
 
+import com.inobitec.tree.shared.model.Node;
+
 public class Constants {
 
     public static final String ID = "id";
@@ -26,7 +28,10 @@ public class Constants {
     public static final int PORT_NODE_ROW = 4;
     
     
-    public static final Integer EMPTY_ID = null;
+    public static final boolean ACTIVE = true;
+    public static final boolean UNACTIVE = false;
     
+    public static final Integer EMPTY_ID = null;
+    public static final Node EMPTY_NODE = null;
     public static final String EMPTY_SYMBOL = "";;
 }

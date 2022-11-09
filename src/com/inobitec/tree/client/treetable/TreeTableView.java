@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.inobitec.tree.client.event.EventBus;
 import com.inobitec.tree.client.event.SelectedNodeEvent;
+import com.inobitec.tree.client.event.UpdateButtonsEvent;
 import com.inobitec.tree.shared.Constants;
 import com.inobitec.tree.shared.model.Node;
 
@@ -57,6 +58,7 @@ public class TreeTableView extends Composite implements TreeTableDisplay {
                         itemFromTable.setText(nodeFromTable.getName() + UNTOUCH);
                     }
                 }
+                EventBus.getInstance().fireEvent(new UpdateButtonsEvent(Constants.ACTIVE));
                 EventBus.getInstance().fireEvent(new SelectedNodeEvent(getSelectedNode()));
             }
         });
