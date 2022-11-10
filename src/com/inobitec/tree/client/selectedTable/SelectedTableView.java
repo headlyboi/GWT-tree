@@ -16,8 +16,6 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
     private VerticalPanel selectedVerticalPanel;
     private VerticalPanel wrapperVerticalPanel;
 
-    
-    
     public SelectedTableView(String style, String wrapperStyle) {
         build(style, wrapperStyle);
         initWidget(selectedVerticalPanel);
@@ -45,11 +43,11 @@ public class SelectedTableView extends Composite implements SelectedTableDisplay
 
     @Override
     public void setNodeData(Node node) {
-        if (node == null){
+        if (node == null) {
             cleanData();
             return;
         }
-        
+
         flexTable.setText(Constants.ID_NODE_ROW, Constants.PARENT_ID_NODE_COL, String.valueOf(node.getId()));
         Integer parentId = node.getParentId();
         if (parentId == Constants.EMPTY_ID) {

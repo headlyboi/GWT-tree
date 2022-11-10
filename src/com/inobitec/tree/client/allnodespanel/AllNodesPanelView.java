@@ -44,7 +44,7 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
     private FlexTable flexTable;
 
     private Command command;
-    
+
     public AllNodesPanelView(String headerStyle, String wrapperStyle) {
         build(headerStyle, wrapperStyle);
         buildFields();
@@ -91,7 +91,6 @@ public class AllNodesPanelView extends Composite implements AllNodesPanelDisplay
 
     private void bindRefreshButton() {
         refreshButton.addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 command.executeCommand();

@@ -7,12 +7,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.inobitec.tree.client.TreeProject;
 import com.inobitec.tree.client.event.EventBus;
-import com.inobitec.tree.client.event.SelectedNodeEvent;
-import com.inobitec.tree.client.event.UpdateButtonsEvent;
-import com.inobitec.tree.client.event.UpdateTreeEvent;
+import com.inobitec.tree.client.event.UpdateSelectedNodeEvent;
+import com.inobitec.tree.client.event.UpdateTablesEvent;
 import com.inobitec.tree.client.event.command.Command;
-import com.inobitec.tree.client.event.handler.UpdateTreeHandler;
-import com.inobitec.tree.shared.Constants;
+import com.inobitec.tree.client.event.handler.UpdateTablesHandler;
 import com.inobitec.tree.shared.model.Node;
 
 public class TreeTablePresenter {
@@ -22,16 +20,15 @@ public class TreeTablePresenter {
     public TreeTablePresenter(TreeTableDisplay view) {
         this.view = view;
         getAllNodes();
-        bindUpdateTreeHandler();
         bindUpdateCommand();
+        bindUpdateTablesEvent();
     }
 
     private void bindUpdateCommand() {
         view.setCommand(new Command() {
             @Override
             public void executeCommand() {
-                EventBus.getInstance().fireEvent(new UpdateButtonsEvent(Constants.ACTIVE));
-                EventBus.getInstance().fireEvent(new SelectedNodeEvent(view.getSelectedNode()));
+                EventBus.getInstance().fireEvent(new UpdateSelectedNodeEvent(view.getSelectedNode()));
             }
         });
     }
@@ -51,11 +48,10 @@ public class TreeTablePresenter {
         });
     }
 
-    private void bindUpdateTreeHandler() {
-        EventBus.getInstance().addHandler(UpdateTreeEvent.TYPE, new UpdateTreeHandler() {
-
+    private void bindUpdateTablesEvent() {
+        EventBus.getInstance().addHandler(UpdateTablesEvent.TYPE, new UpdateTablesHandler() {
             @Override
-            public void onUpdateTree(UpdateTreeEvent updateEvent) {
+            public void onUpdateTables(UpdateTablesEvent updateTablesEvent) {
                 getAllNodes();
             }
         });
